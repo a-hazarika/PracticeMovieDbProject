@@ -33,9 +33,22 @@ namespace MovieServices
             return GetAll().FirstOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<Movie> GetProducerMovies(int actorId)
+        public IEnumerable<Movie> GetProducerMovies(int producerId)
         {
-            throw new NotImplementedException();
+            var resultSet = _context.MovieProducerMappings
+                    .Where(x => x.Producer.Id == producerId)
+                    .Include(x => x.Movie)
+                    .Select(result => new Movie
+                    {
+                        Id = result.Movie.Id,
+                        Name = result.Movie.Name,
+                        Plot = result.Movie.Plot,
+                        PosterUrl = result.Movie.PosterUrl,
+                        ReleaseYear = result.Movie.ReleaseYear,
+                        Producer = result.Movie.Producer
+                    });
+
+            return resultSet;
         }
     }
 }

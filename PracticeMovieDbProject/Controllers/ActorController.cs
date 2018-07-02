@@ -40,8 +40,7 @@ namespace PracticeMovieDbProject.Controllers
                     DOB = result.DOB.ToString("MM/dd/yyyy"),
                     Age = result.Age,
                     Sex = result.Sex.Description,
-                    Bio = result.Bio,
-                    Movies = _actorDbService.GetActorMovies(result.Id)
+                    Bio = result.Bio
                 });
 
             var model = new ActorsListingModel()

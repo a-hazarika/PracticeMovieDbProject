@@ -12,6 +12,7 @@ namespace MovieData
         public DbSet<Gender> Gender { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieActorMapping> MovieActorMappings { get; set; }
+        public DbSet<MovieProducerMapping> MovieProducerMappings { get; set; }
     }
 }
  

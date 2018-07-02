@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieData;
 
 namespace MovieData.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180702213347_AddMovieProducerMapping")]
+    partial class AddMovieProducerMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,25 +115,6 @@ namespace MovieData.Migrations
                     b.ToTable("MovieActorMappings");
                 });
 
-            modelBuilder.Entity("MovieData.Models.MovieProducerMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("MovieId");
-
-                    b.Property<int?>("ProducerId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("ProducerId");
-
-                    b.ToTable("MovieProducerMappings");
-                });
-
             modelBuilder.Entity("MovieData.Models.Producer", b =>
                 {
                     b.Property<int>("Id")
@@ -190,17 +173,6 @@ namespace MovieData.Migrations
                     b.HasOne("MovieData.Models.Movie", "Movie")
                         .WithMany()
                         .HasForeignKey("MovieId");
-                });
-
-            modelBuilder.Entity("MovieData.Models.MovieProducerMapping", b =>
-                {
-                    b.HasOne("MovieData.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId");
-
-                    b.HasOne("MovieData.Models.Producer", "Producer")
-                        .WithMany()
-                        .HasForeignKey("ProducerId");
                 });
 
             modelBuilder.Entity("MovieData.Models.Producer", b =>

@@ -40,8 +40,7 @@ namespace PracticeMovieDbProject.Controllers
                     DOB = result.DOB.ToString("MM/dd/yyyy"),
                     Age = result.Age,
                     Sex = result.Sex.Description,
-                    Bio = result.Bio,
-                    //Movies = _actorDbService.GetActorMovies(result.Id)
+                    Bio = result.Bio
                 });
 
             var model = new ProducerListingModel()
@@ -69,7 +68,7 @@ namespace PracticeMovieDbProject.Controllers
                 Age = producer.Age,
                 Bio = producer.Bio,
                 Sex = producer.Sex.Description,
-                //Movies = _actorDbService.GetActorMovies(id)
+                Movies = _actorDbService.GetActorMovies(id)
             };
 
             return View(model);
