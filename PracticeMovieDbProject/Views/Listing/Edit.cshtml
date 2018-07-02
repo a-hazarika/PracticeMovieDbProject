@@ -1,0 +1,79 @@
+﻿@model PracticeMovieDbProject.Models.EditMovieModel
+@{
+    ViewBag.Title = "Edit Movie - " + Model.Movie.Name;
+}
+
+<h3>Edit <strong>@Model.Movie.Name</strong></h3>
+
+<div class="row">
+    <form method="post">
+        <div class="col-sm-2 col-xs-12" style="border:2px solid red">
+            <img src="~/images/@Model.Movie.PosterUrl" alt="@Model.Movie.Name" style="padding-top:10px; width:100%; min-width:100px;">
+            <label class="btn btn-sm btn-info" style="width:100%; min-width:100px;">
+                Change <input type="file" style="display:none;">
+            </label>
+            <label class="label-warning small" style="width:100%; min-width:100px;">
+                Only .jpg/.png files allowed.
+            </label>
+        </div>
+        <div class="col-sm-10 col-xs-12" style="border:2px solid red">
+            <div class="row">
+                <div class="col-sm-10 col-xs-12">
+                    <label>Title:</label><input type="text" class="form-control" name="name" value="@Model.Movie.Name">
+                </div>
+                <div class="col-sm-2">
+                    <label>Year:</label><input type="number" class="form-control" name="year" value="@Model.Movie.ReleaseYear">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="margin-top:5px;">
+                    <label>Plot:</label>
+                    <textarea class="form-control" name="plot" style="height:150px">@Model.Movie.Plot</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-inline" style="margin-top:0 5px 0 0; padding:0px">
+                    <div class="col-sm-12">
+                        <label for="producer">Producer (select one):</label>
+                        <select class="form-control" id="producer" name="producer">
+                            @foreach (var producer in Model.Producers)
+                            {
+                                if (producer.Id == Model.Movie.Producer.Id)
+                                {
+                                    <option selected="selected">@producer.FullName</option>
+                                }
+                                else
+                                {
+                                    <option>@producer.FullName</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn-sm btn-info">Add New</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-inline" style="margin-top:0 5px 0 0; padding:0px">
+                    <div class="col-sm-12">
+                        <label>Actors:</label>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"> Select Actors </button>
+                        <ul class="dropdown-menu">
+                            @foreach (var actor in Model.Actors)
+                            {
+                                <li style="padding:3px 10px 3px 10px;">
+                                    <input style="width:15px;height:15px" type="checkbox" value="@actor.Id" name="actorId" />&nbsp;@actor.FullName
+                                </li>
+                            }
+                        </ul>
+
+                        <button class="btn-sm btn-info">Add New</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right" style="border:2px solid green;">
+            <input class="btn-sm btn-primary" type="submit" style="width:100px;margin-top:10px;" />
+        </div>
+    </form>
+</div>

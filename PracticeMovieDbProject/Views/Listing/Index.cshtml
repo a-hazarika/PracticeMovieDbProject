@@ -1,0 +1,122 @@
+﻿@model PracticeMovieDbProject.Models.ListingModel
+@{
+    ViewBag.Title = "Movie Listings";
+}
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Learn how to build ASP.NET apps that can run anywhere.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    There are powerful new features in Visual Studio for building modern web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Bring in libraries from NuGet and npm, and automate tasks using Grunt or Gulp.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner4.svg" alt="Microsoft Azure" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Title</h2>
+        <div id="moviesTable">
+            <table class="table table-condensed" id="moviesTable">
+                <tbody>
+                    @foreach (var movie in Model.Movies)
+                    {
+                    <tr class="movieRow">
+                        <td class="">
+                            <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">
+                                <img src="~/images/@movie.PosterUrl" class="imageCell" width="80" height="120"/>
+                            </a>
+                        </td>
+                        <td>
+                            <div>
+                                <span style="font-size:20px"> 
+                                    <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id"><strong>@movie.Name </strong></a> (@movie.ReleaseYear)
+                                </span>
+                            </div>
+                            <div> @movie.Plot </div>
+                            <div style="margin-top:5px;">
+                                <span style="color:darkgray"><strong>Producer</strong>: </span> 
+                                <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.ProducerId">@movie.ProducerName</a>
+                            </div>
+                            <div>
+                                <span style="color:darkgray"><strong>Actor</strong>: </span>
+
+                                @{
+                                    string endChar = "";
+                                    foreach (var actor in movie.Actors)
+                                    {
+                                        if (actor.Id != movie.Actors.Last().Id)
+                                        {
+                                            endChar = ", ";
+                                        }
+                                        else
+                                        {
+                                            endChar = "";
+                                        }
+
+                                    <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id">@actor.FullName</a>@endChar
+                                    }
+                                }
+                            </div>                        
+                        </td>
+                        <td><a asp-controller="Listing" asp-action="Edit" asp-route-id="@movie.Id">Edit</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>       
+    </div>   
+</div>

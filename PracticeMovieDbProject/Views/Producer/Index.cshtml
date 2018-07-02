@@ -1,0 +1,26 @@
+﻿@model PracticeMovieDbProject.Models.ProducerListingModel
+@{
+    ViewBag.Title = "Actor Listings";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Title</h2>
+        <div id="moviesTable">
+            @foreach (var producer in Model.Producers)
+            {
+                <hr />
+                <div class="row" style="padding:10px">
+                    <div class="col-md-12">
+                        <div class="col-sm-2">
+                            <img src="~/images/posters/No_Image_Available.gif" style="width:100%; max-width:300px" class="imageCell" />
+                        </div>
+                        <div class="col-sm-10">
+                            <a asp-controller="Producer" asp-action="Detail" asp-route-id="@producer.Id"><strong>@producer.Name</strong></a> (@producer.Sex, @producer.Age years)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

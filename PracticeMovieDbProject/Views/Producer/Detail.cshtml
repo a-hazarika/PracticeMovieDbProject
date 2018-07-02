@@ -1,0 +1,36 @@
+﻿@model PracticeMovieDbProject.Models.ProducerDetailModel
+@{
+    ViewData["Title"] = Model.Name + " Bio";
+}
+
+<div class="row" style="padding:10px">
+    <div class="col-md-12">
+        <div class="col-sm-2">
+            <img src="~/images/posters/No_Image_Available.gif" style="width:100%; max-width:300px" class="imageCell" />
+        </div>
+        <div class="col-sm-10">
+            <div class="row">
+                <strong>@Model.Name </strong> (@Model.Sex, @Model.Age years)
+            </div>
+            <div class="row">
+                Date of birth: @Model.DOB
+            </div>
+            <div class="row">
+                <p><strong>Bio:</strong> @Model.Bio</p>
+            </div>
+            <div class="row">
+                <strong>Movies</strong>
+                <ul>
+                    @{if (Model.Movies != null)
+                        {
+                            foreach (var movie in Model.Movies)
+                            {
+                                <li><a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a> (@movie.ReleaseYear)</li>                                
+                            }
+                        }
+                     }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
