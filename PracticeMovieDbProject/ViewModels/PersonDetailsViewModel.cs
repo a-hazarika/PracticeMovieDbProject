@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MovieData.Models;
 
-namespace PracticeMovieDbProject.Models
+namespace PracticeMovieDbProject.ViewModels
 {
-    public class ProducerDetailModel
+    public class PersonDetailsViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

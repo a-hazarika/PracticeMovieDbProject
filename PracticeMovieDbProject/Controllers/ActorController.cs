@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieData;
-using PracticeMovieDbProject.Models;
+using PracticeMovieDbProject.ViewModels;
 
 namespace PracticeMovieDbProject.Controllers
 {
@@ -33,7 +33,7 @@ namespace PracticeMovieDbProject.Controllers
             }
 
             var listingResult = actors
-                .Select(result => new ActorDetailModel
+                .Select(result => new PersonDetailsViewModel
                 {
                     Id = result.Id,
                     Name = result.FullName,
@@ -43,7 +43,7 @@ namespace PracticeMovieDbProject.Controllers
                     Bio = result.Bio
                 });
 
-            var model = new ActorsListingModel()
+            var model = new ActorsListingViewModel()
             {
                 Actors = listingResult
             };
@@ -51,16 +51,21 @@ namespace PracticeMovieDbProject.Controllers
             return View(model);
         }
 
-        public IActionResult Detail(int id)
+        public IActionResult Detail(int? id)
         {
-            var actor = _actorDbService.GetById(id);
+            if(!id.HasValue)
+            {
+                return RedirectToAction("Error", "Listing");
+            }
+
+            var actor = _actorDbService.GetById(id.Value);
             
             if(actor == null)
             {
                 return RedirectToAction("Error", "Listing");
             }
 
-            var model = new ActorDetailModel
+            var model = new PersonDetailsViewModel
             {
                 Id = actor.Id,
                 Name = actor.FullName,
@@ -68,7 +73,7 @@ namespace PracticeMovieDbProject.Controllers
                 Age = actor.Age,
                 Bio = actor.Bio,
                 Sex = actor.Sex.Description,
-                Movies = _actorDbService.GetActorMovies(id)
+                Movies = _actorDbService.GetActorMovies(id.Value)
             };
 
             return View(model);

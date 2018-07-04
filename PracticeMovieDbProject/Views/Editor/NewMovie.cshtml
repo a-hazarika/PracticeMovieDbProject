@@ -1,0 +1,79 @@
+﻿@model MovieViewModel
+@{
+    ViewData["Title"] = "Add Movie";
+}
+
+<div class="row">
+    <div class="page-header"><h3>Add New Movie</h3></div>
+    <form method="post">
+        <div class="col-sm-12 col-xs-12" style="border:2px solid red">
+            <div class="row">
+                <div class="col-sm-10 col-xs-12">
+                    <label min-width:100px;">Poster (.jpg/.png)</label>                    
+                    <input class="form-control btn-info" type="file" asp-for="@Model.PosterUrl"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10 col-xs-12" style="margin-top:5px;">
+                    <label asp-for="@Model.Name"></label> <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                    <input class="form-control" asp-for="@Model.Name">
+                </div>
+                <div class="col-sm-2">
+                    <label asp-for="@Model.ReleaseYear"></label>
+                    <input class="form-control" asp-for="@Model.ReleaseYear">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="margin-top:5px;">
+                    <label asp-for="@Model.Plot"> </label> <span asp-validation-for="@Model.Plot" class="text-danger"></span>
+                    <textarea asp-for="@Model.Plot" class="form-control" style="height:150px" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-inline" style="margin-top:5px; padding:0px">
+                    <div class="col-sm-12">
+                        <label asp-for="@Model.Producer">Producer (select one):</label>
+                        <span asp-validation-for="@Model.Producer" class="text-danger"></span>
+                        <select class="form-control" asp-for="@Model.ProducerId" asp-items="@(new SelectList(Model.Producers,"Id", "FullName"))"></select>
+                        <button class="btn-sm btn-info">Add New</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-inline" style="margin-top:5px; padding:0px">
+                    <div class="col-sm-12">
+                        <label>Actors:</label>
+                        <span asp-validation-for="@Model.AllActors" class="text-danger"></span>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"> Select Actors </button>
+                        <ul class="dropdown-menu">
+                            @for (var i = 0; i < Model.AllActors.Count; i++)
+                            {
+                                <li style="padding:3px 10px 3px 10px;">
+                                    <input style="width:15px;height:15px" type="checkbox" asp-for="@Model.AllActors[i].Checked" />
+                                    <label asp-for="@Model.AllActors[i].Checked"> @Model.AllActors[i].FullName</label>
+                                    <input type="hidden" asp-for="@Model.AllActors[i].Id" />
+                                    <input type="hidden" asp-for="@Model.AllActors[i].FullName" />
+                                </li>
+                            }
+
+                            @foreach (var actor in Model.AllActors)
+                            {/*
+                                <li style="padding:3px 10px 3px 10px;">
+                                    <input style="width:15px;height:15px" type="checkbox" value="@actor.Id" asp-for="@Model.ActorIds" />&nbsp;@actor.FullName
+                                </li>
+                                */
+                            }
+                        </ul>
+
+                        <button class="btn-sm btn-info">Add New</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right" style="border:2px solid green;">
+            <input class="btn-sm btn-success" type="submit" style="width:100px;margin-top:10px;" />
+            <input class="btn-sm btn-warning" type="reset" style="width:100px;margin-top:10px;" />
+        </div>
+    </form>
+</div>

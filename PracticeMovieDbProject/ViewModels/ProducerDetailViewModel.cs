@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using MovieData.Models;
 
-namespace PracticeMovieDbProject.Models
+namespace PracticeMovieDbProject.ViewModels
 {
-    public class ActorDetailModel
+    /*
+    public class ProducerDetailViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,4 +17,5 @@ namespace PracticeMovieDbProject.Models
         public string Bio { get; set; }
         public IEnumerable<Movie> Movies { get; set; }
     }
+    */
 }

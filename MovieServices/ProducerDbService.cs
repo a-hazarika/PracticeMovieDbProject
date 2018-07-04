@@ -23,6 +23,38 @@ namespace MovieServices
             _context.SaveChanges();
         }
 
+        public int? GetProducerId(string first, string middle, string last)
+        {
+            if (string.IsNullOrWhiteSpace(middle))
+            {
+                return _context.Producers
+                    .Where(x => x.FirstName == first && x.LastName == last)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+            }
+
+            return _context.Producers
+                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+        }
+
+        public int? GetProducerId(string first, string middle, string last, DateTime dob)
+        {
+            if (string.IsNullOrWhiteSpace(middle))
+            {
+                return _context.Producers
+                    .Where(x => x.FirstName == first && x.LastName == last && x.DOB == dob)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+            }
+
+            return _context.Producers
+                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle && x.DOB == dob)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+        }
+
         public IEnumerable<Producer> GetAll()
         {
             return _context.Producers.Include(x => x.Sex);

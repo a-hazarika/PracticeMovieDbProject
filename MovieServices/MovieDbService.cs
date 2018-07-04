@@ -39,6 +39,22 @@ namespace MovieServices
             return result;
         }
 
+        public int? GetMovieId(string name, int? releaseYear)
+        {   
+            if(!releaseYear.HasValue)
+            {
+                return _context.Movies
+                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)
+                    .Select(y => y.Id)
+                    .Last();
+            }
+
+            return _context.Movies
+                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+        }
+
         public IEnumerable<Actor> GetMovieActors(int movieId)
         {
             var resultSet = _context.MovieActorMappings

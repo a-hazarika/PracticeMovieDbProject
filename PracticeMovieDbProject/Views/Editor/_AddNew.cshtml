@@ -1,0 +1,75 @@
+﻿@model PersonViewModel
+
+<div class="form-group-lg">
+    <form asp-controller="Editor" asp-action="@ViewData["AddNew"]" method="post">
+        <div class="row">
+            <div class="col-sm-3" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.FirstName"> </label>
+                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-sm">
+                    <input asp-for="@Model.FirstName" style="width:100%" />                    
+                </div>
+            </div>
+            <div class="col-sm-3" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.MiddleName"> </label>
+                </div>
+                <div class="col-sm">
+                    <input asp-for="@Model.MiddleName" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-sm-3" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.LastName"> </label>
+                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                </div>
+                <div class="col-sm">
+                    <input asp-for="@Model.LastName" style="width:100%" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.DOB"> </label>
+                    <span asp-validation-for="@Model.DOB" class="text-danger"></span>
+                </div>
+                <div class="col-sm">
+                    <input asp-for="@Model.DOB" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-sm-3" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.Sex"></label>
+                    <span asp-validation-for="@Model.Sex" class="text-danger"></span>
+                </div>
+                <div class="col-sm">
+                    @foreach (var gender in Model.SexOptions)
+                    {
+                        <label class="radio-inline">
+                            <input type="radio" asp-for="@Model.Sex" class="radio-inline" value="@gender.Description"/>@gender.Description
+                        </label>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-9" style="padding:10px">
+                <div class="col-sm">
+                    <label asp-for="@Model.Bio" style="vertical-align:top"> </label>
+                    <span asp-validation-for="@Model.Bio" class="text-danger"></span>
+                </div>
+                <div class="col-sm">
+                    <textarea rows="5" asp-for="@Model.Bio" id="Bio" name="Bio" style="width:100%"></textarea>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(x => x.PersonType)
+        <div class="row" style="padding:10px">
+            <button type="submit" class="btn btn-info btn-sm">Add</button>
+            <button type="reset" class="btn btn-info btn-sm">Reset</button>
+        </div>
+    </form>
+</div>

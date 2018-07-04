@@ -1,6 +1,6 @@
 using System;
 
-namespace PracticeMovieDbProject.Models
+namespace PracticeMovieDbProject.ViewModels
 {
     public class ErrorViewModel
     {

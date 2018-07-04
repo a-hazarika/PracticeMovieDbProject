@@ -1,4 +1,4 @@
-﻿@model PracticeMovieDbProject.Models.ListingModel
+﻿@model MovieListingViewModel
 @{
     ViewBag.Title = "Movie Listings";
 }
@@ -66,9 +66,9 @@
 
                                 @{
                                     string endChar = "";
-                                    foreach (var actor in movie.Actors)
+                                    foreach (var actor in movie.MovieActors)
                                     {
-                                        if (actor.Id != movie.Actors.Last().Id)
+                                        if (actor.Id != movie.MovieActors.Last().Id)
                                         {
                                             endChar = ", ";
                                         }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PracticeMovieDbProject.Models
+namespace PracticeMovieDbProject.ViewModels
 {
-    public class EditMovieModel
+    public class EditMovieViewModel
     {
         public Movie Movie { get; set; }
         public IEnumerable<Producer> Producers { get; set; }

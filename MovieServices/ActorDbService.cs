@@ -20,7 +20,39 @@ namespace MovieServices
         public void Add(Actor newActor)
         {
             _context.Add(newActor);
-            _context.SaveChanges();
+            var value = _context.SaveChanges();
+        }
+
+        public int? GetActorId(string first, string middle, string last)
+        {
+            if(string.IsNullOrWhiteSpace(middle))
+            {
+                return _context.Actors
+                    .Where(x => x.FirstName == first && x.LastName == last)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+            }
+
+            return _context.Actors
+                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+        }
+
+        public int? GetActorId(string first, string middle, string last, DateTime dob)
+        {
+            if (string.IsNullOrWhiteSpace(middle))
+            {
+                return _context.Actors
+                    .Where(x => x.FirstName == first && x.LastName == last && x.DOB == dob)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
+            }
+
+            return _context.Actors
+                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle && x.DOB == dob)
+                    .Select(y => y.Id)
+                    .FirstOrDefault();
         }
 
         public IEnumerable<Movie> GetActorMovies(int actorId)

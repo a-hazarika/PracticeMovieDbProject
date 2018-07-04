@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieData;
 using MovieServices;
-using PracticeMovieDbProject.Models;
+using PracticeMovieDbProject.ViewModels;
 
 namespace PracticeMovieDbProject.Controllers
 {
@@ -27,10 +27,10 @@ namespace PracticeMovieDbProject.Controllers
 
         public IActionResult Index()
         {
-            var moviesListing = _movieDbService.GetAll();
+            var moviesListing = _movieDbService.GetAll().OrderByDescending(x => x.Id);
                         
             var listingResult = moviesListing
-                .Select(result => new MoviesListingModel
+                .Select(result => new MovieViewModel
                 {
                     Id = result.Id,
                     Name = result.Name,
@@ -39,10 +39,10 @@ namespace PracticeMovieDbProject.Controllers
                     ReleaseYear = result.ReleaseYear,
                     ProducerId = result.Producer.Id,
                     ProducerName = result.Producer.FullName,
-                    Actors = result.Actors
+                    MovieActors = result.Actors.ToList()
                 });
 
-            var model = new ListingModel()
+            var model = new MovieListingViewModel()
             {
                 Movies = listingResult
             };
@@ -59,7 +59,7 @@ namespace PracticeMovieDbProject.Controllers
                 return Error(404);
             }
 
-            var model = new ViewMovieModel
+            var model = new ViewMovieViewModel
             {
                 Movie = movie
             };
@@ -70,8 +70,8 @@ namespace PracticeMovieDbProject.Controllers
         public IActionResult Edit(int id)
         {
             var movie = _movieDbService.GetById(id);
-            var producers = _producerDbService.GetAll();
-            var actors = _actorDbService.GetAll();
+            var producers = _producerDbService.GetAll().OrderBy(x => x.FirstName);
+            var actors = _actorDbService.GetAll().OrderBy(x => x.FirstName);
             var genders = _genderDbService.GetGenders();
 
             if(movie == null || producers == null || actors == null || genders == null)
@@ -79,7 +79,7 @@ namespace PracticeMovieDbProject.Controllers
                 return Error(404);
             }
 
-            var listingResult = new EditMovieModel()
+            var listingResult = new EditMovieViewModel()
             {
                Movie = movie,
                Actors = actors,
