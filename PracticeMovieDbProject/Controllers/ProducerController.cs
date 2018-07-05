@@ -41,7 +41,8 @@ namespace PracticeMovieDbProject.Controllers
                     Age = result.Age,
                     Sex = result.Sex.Description,
                     Bio = result.Bio
-                });
+                })
+                .OrderBy(x => x.Name);
 
             var model = new ProducersListingViewModel()
             {
