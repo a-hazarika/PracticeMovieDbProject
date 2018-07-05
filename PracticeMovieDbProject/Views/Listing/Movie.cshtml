@@ -3,33 +3,40 @@
     ViewBag.Title = Model.Movie.Name;
 }
 
-<h3><strong>@Model.Movie.Name</strong> (@Model.Movie.ReleaseYear)</h3>
-
-<div class="row" style="padding:10px">
-    <div class="col-md-12">
-        <div class="col-sm-2">
-            <img src="~/images/@Model.Movie.PosterUrl" alt="@Model.Movie.Name" style="width:100%; max-width:300px" class="imageCell" />
+<div class="jumbotron">
+    <div class=" row">
+        <div class="col-md-4">
+            <div>
+                <img class="squareImage" src="~/images/@Model.Movie.PosterUrl" alt="@Model.Movie.Name" />
+            </div>
         </div>
-        <div class="col-sm-10">
-            <div class="row">
-                <p><strong>Plot:</strong> @Model.Movie.Plot</p>
-            </div>
-            <div class="row">
-                <p><strong>Producer:</strong>
-                   <a asp-controller="Producer" asp-action="Detail" asp-route-id="@Model.Movie.Producer.Id">@Model.Movie.Producer.FullName</a>
-                </p>
-            </div>
-            <div class="row">
-                <strong>Actors</strong>
-                <ul>
-                    @foreach (var actor in Model.Movie.Actors)
+        <div class="col-md-8 detailPanel">
+            <p>
+                <span class="movieHeader">@Model.Movie.Name </span> (@Model.Movie.ReleaseYear)                
+                <a asp-controller="Listing" asp-action="Edit" asp-route-id="@Model.Movie.Id">
+                    <button class="btn btn-sm btn-info">Edit</button>
+                </a>
+            </p>
+
+            <strong>Plot:</strong> @Model.Movie.Plot
+            <br /><br />
+
+            <strong>Producer:</strong>
+            <a asp-controller="Producer" asp-action="Detail" asp-route-id="@Model.Movie.Producer.Id">@Model.Movie.Producer.FullName</a>
+            <br />
+
+            <strong>Actors</strong>
+            <ul>
+                @if (Model.Movie.Actors != null)
+                {
+                    foreach (var actor in Model.Movie.Actors)
                     {
                         <li>
                             <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id">@actor.FullName</a>
                         </li>
                     }
-                </ul>
-            </div>
+                }
+            </ul>
         </div>
     </div>
 </div>

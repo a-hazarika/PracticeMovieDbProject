@@ -38,31 +38,30 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>@ViewBag.Title</h2>
+        <h3 class="text-muted">@ViewBag.Title</h3>
         <div id="moviesTable">
             <table class="table table-condensed" id="moviesTable">
                 <tbody>
                     @foreach (var movie in Model.Movies)
                     {
                     <tr class="movieRow">
-                        <td class="">
+                        <td>
                             <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">
-                                <img src="~/images/@movie.PosterUrl" class="imageCell" width="80" height="120"/>
+                                <img src="~/images/@movie.PosterUrl" class="rectangularImage" />
                             </a>
                         </td>
                         <td>
                             <div>
-                                <span style="font-size:20px"> 
-                                    <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id"><strong>@movie.Name </strong></a> (@movie.ReleaseYear)
-                                </span>
+                                <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a>
+                                <span class="textLarge"> (@movie.ReleaseYear)</span>
                             </div>
                             <div> @movie.Plot </div>
-                            <div style="margin-top:5px;">
-                                <span style="color:darkgray"><strong>Producer</strong>: </span> 
+                            <div class="topMarginOnly">
+                                <span class="boldGrayText">Producer: </span>
                                 <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.ProducerId">@movie.ProducerName</a>
                             </div>
                             <div>
-                                <span style="color:darkgray"><strong>Actor</strong>: </span>
+                                <span class="boldGrayText">Actors: </span>
 
                                 @{
                                     string endChar = "";
@@ -82,7 +81,11 @@
                                 }
                             </div>                        
                         </td>
-                        <td><a asp-controller="Listing" asp-action="Edit" asp-route-id="@movie.Id">Edit</a></td>
+                        <td>
+                            <a asp-controller="Listing" asp-action="Edit" asp-route-id="@movie.Id">
+                                <button class="btn btn-sm btn-info">Edit</button>
+                            </a>
+                        </td>
                     </tr>
                     }
                 </tbody>

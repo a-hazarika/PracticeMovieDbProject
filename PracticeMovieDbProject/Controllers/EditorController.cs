@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MovieData;
@@ -19,13 +22,19 @@ namespace PracticeMovieDbProject.Controllers
         private IGenderService _genderDbService;
 
         private static IEnumerable<Gender> _genders;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public EditorController(IMovieService movies, IActorService actors, IProducerService producers, IGenderService genders)
+        public EditorController(IMovieService movies, 
+            IActorService actors,
+            IProducerService producers, 
+            IGenderService genders,
+            IHostingEnvironment hostingEnvironment)
         {   
             _movieDbService = movies;
             _actorDbService = actors;
             _producerDbService = producers;
             _genderDbService = genders;
+            _hostingEnvironment = hostingEnvironment;
             _genders = _genderDbService.GetGenders();
         }
 
@@ -36,56 +45,57 @@ namespace PracticeMovieDbProject.Controllers
 
         public IActionResult NewMovie()
         {
-            var producers = _producerDbService.GetAll().OrderBy(x => x.FirstName).ToList();
-            var allActors = _actorDbService
-                .GetAll()
-                .Select(result => new ActorCheckboxModel
-                {
-                    Id = result.Id,
-                    FirstName = result.FirstName,
-                    MiddleName = result.MiddleName,
-                    LastName = result.LastName,
-                    DOB = result.DOB,
-                    Bio = result.Bio,
-                    Sex = result.Sex
-                })
-                .OrderBy(x => x.FirstName)
-                .ToList();
-            
             var model = new MovieViewModel()
             {
-                Producers = producers,
-                AllActors = allActors
+                Producers = GetProducersList(),
+                AllActors = ProjectToActorCheckboxModelList()
             };
 
             return View(model);
         }
 
+        private List<Producer> GetProducersList()
+        {
+            return _producerDbService.GetAll().OrderBy(x => x.FirstName).ToList();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult NewMovie(MovieViewModel movieVm)
+        public async Task<IActionResult> NewMovie(MovieViewModel movieVm)
         {
             if (!ModelState.IsValid)
             {
-                movieVm.AllActors = _actorDbService
-                .GetAll()
-                .Select(result => new ActorCheckboxModel
-                {
-                    Id = result.Id,
-                    FirstName = result.FirstName,
-                    MiddleName = result.MiddleName,
-                    LastName = result.LastName,
-                    DOB = result.DOB,
-                    Bio = result.Bio,
-                    Sex = result.Sex
-                })
-                .OrderBy(x => x.FirstName)
-                .ToList();
-                
-                movieVm.Producers = _producerDbService.GetAll().OrderBy(x => x.FirstName).ToList();
-
+                movieVm.AllActors = ProjectToActorCheckboxModelList();
+                movieVm.Producers = GetProducersList();
                 return View("NewMovie", movieVm);
             }
+            
+            if (movieVm.Poster != null)
+            {
+                var poster = movieVm.Poster;
+                var fileType = poster.ContentType.Split("/").Last();
+
+                if (!Enum.GetNames(typeof(PosterTypes)).Contains(fileType) || movieVm.Poster.Length <= 0)
+                {
+                    movieVm.AllActors = ProjectToActorCheckboxModelList();
+                    movieVm.Producers = GetProducersList();
+                    ModelState.AddModelError("Poster", "Invalid poster file");
+                    return View("NewMovie", movieVm);
+                }
+
+                var filePath = _hostingEnvironment.WebRootPath;
+                var fileName = Guid.NewGuid().ToString() + "." + poster.FileName.Split(".").Last();
+                var posterPath = Path.Combine(filePath, "images", "posters", fileName);
+
+                using (var stream = new FileStream(posterPath, FileMode.Create))
+                {
+                    await movieVm.Poster.CopyToAsync(stream);
+                }
+
+                movieVm.PosterUrl = $"posters/{fileName}";
+            }
+
+            //TODO: Add error to model state if no actor is selected and return view
 
             movieVm.Producer = _producerDbService.GetById(movieVm.ProducerId);
 
@@ -98,13 +108,31 @@ namespace PracticeMovieDbProject.Controllers
                 Producer = movieVm.Producer,
             };
 
-            //_movieDbService.Add(newMovie);
+            //TODO: _movieDbService.Add(newMovie);
             var id = _movieDbService.GetMovieId(newMovie.Name, newMovie.ReleaseYear);
 
-            // For all the actors set as true, add entries to actor-movie mapping table with {movieid, actorid}
-            //Add entry to movie-producer mapping table
+            //TODO: For all the actors set as true, add entries to actor-movie mapping table with {movieid, actorid}
+            //TODO: Add entry to movie-producer mapping table
 
             return RedirectToAction("Listing", "Movie", new { id = id });
+        }
+
+        private List<ActorCheckboxModel> ProjectToActorCheckboxModelList()
+        {
+            return _actorDbService
+                            .GetAll()
+                            .Select(result => new ActorCheckboxModel
+                            {
+                                Id = result.Id,
+                                FirstName = result.FirstName,
+                                MiddleName = result.MiddleName,
+                                LastName = result.LastName,
+                                DOB = result.DOB,
+                                Bio = result.Bio,
+                                Sex = result.Sex
+                            })
+                            .OrderBy(x => x.FirstName)
+                            .ToList();
         }
 
         public IActionResult NewProducer()

@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using MovieData.Models;
 using PracticeMovieDbProject.Models;
 
 namespace PracticeMovieDbProject.ViewModels
 {
+    public enum PosterTypes
+    {
+        jpg,
+        jpeg,
+        png,
+        gif,
+        svg
+    }
+
     public class MovieViewModel
     {
         public int Id { get; set; }
@@ -23,10 +33,12 @@ namespace PracticeMovieDbProject.ViewModels
         [Display(Name = "Release Year")]
         public int? ReleaseYear { get; set; }
 
-        [DataType(DataType.ImageUrl)]
+        [DataType(DataType.ImageUrl, ErrorMessage = "Invalid image file")]
         [Display(Name = "Change Poster")]
-        public string PosterUrl { get; set; }     
-        
+        public string PosterUrl { get; set; }
+
+        public IFormFile Poster { get; set; }
+
         public int ProducerId { get; set; }
         
         public string ProducerName { get; set; }

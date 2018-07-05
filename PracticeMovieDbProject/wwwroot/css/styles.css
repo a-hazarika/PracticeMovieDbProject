@@ -1,0 +1,71 @@
+﻿.squareImage {
+    width: 100%;
+    max-width: 200px
+}
+
+.rectangularImage {
+    width: 80px;
+    height: 120px;
+}
+
+.detailPanel p {
+    font-size: 16px;
+}
+
+#assetName {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.padded {
+    padding: 10px;
+}
+
+.movieHeader {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.textLarge {
+    font-size: 20px;
+}
+
+.boldGrayText {
+    color: darkgray;
+    font-weight: bold;
+}
+
+.topMarginOnly {
+    margin-top: 5px;
+}
+
+.textJustify {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.widthFull {
+    width: 100%;
+}
+
+.alignRight {
+    position: relative;
+    right: 0px;
+}
+
+.zeroPadding {
+    padding: 0px;
+}
+
+.roundedEdge-box {
+    padding: 3px;
+    border-radius: 5px;
+    background-color: lightgrey;
+}
+
+.fixed-maxheight{
+    max-height:400px;
+}
+.auto-scroll {
+    overflow: auto;
+}

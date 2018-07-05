@@ -3,49 +3,54 @@
     ViewData["Title"] = "Add Movie";
 }
 
-<div class="row">
-    <div class="page-header"><h3>Add New Movie</h3></div>
-    <form method="post">
-        <div class="col-sm-12 col-xs-12" style="border:2px solid red">
+
+<div class="row roundedEdge-box">
+    <div class="col-sm-12 col-xs-12">
+        <h3 class="text-muted">Add New Movie</h3>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="col-sm-12 col-xs-12">
             <div class="row">
                 <div class="col-sm-10 col-xs-12">
-                    <label min-width:100px;">Poster (.jpg/.png)</label>                    
-                    <input class="form-control btn-info" type="file" asp-for="@Model.PosterUrl"/>
+                    <label>Poster (.jpg/.png)</label>
+                    <span asp-validation-for="@Model.PosterUrl" class="text-danger"></span>
+                    <span asp-validation-for="@Model.Poster" class="text-danger"></span>
+                    <input class="form-control btn-info" type="file" asp-for="@Model.Poster" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-10 col-xs-12" style="margin-top:5px;">
+                <div class="col-sm-10 col-xs-12 topMarginOnly">
                     <label asp-for="@Model.Name"></label> <span asp-validation-for="@Model.Name" class="text-danger"></span>
                     <input class="form-control" asp-for="@Model.Name">
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2 topMarginOnly">
                     <label asp-for="@Model.ReleaseYear"></label>
                     <input class="form-control" asp-for="@Model.ReleaseYear">
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12" style="margin-top:5px;">
+                <div class="col-xs-12 topMarginOnly">
                     <label asp-for="@Model.Plot"> </label> <span asp-validation-for="@Model.Plot" class="text-danger"></span>
                     <textarea asp-for="@Model.Plot" class="form-control" style="height:150px" rows="5"></textarea>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12 form-inline" style="margin-top:5px; padding:0px">
+                <div class="col-sm-12 form-inline topMarginOnly zeroPadding">
                     <div class="col-sm-12">
                         <label asp-for="@Model.Producer">Producer (select one):</label>
                         <span asp-validation-for="@Model.Producer" class="text-danger"></span>
                         <select class="form-control" asp-for="@Model.ProducerId" asp-items="@(new SelectList(Model.Producers,"Id", "FullName"))"></select>
-                        <button class="btn-sm btn-info">Add New</button>
+                        <button class="btn-sm btn-info" id="btnAddProducer">Add New</button>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12 form-inline" style="margin-top:5px; padding:0px">
+                <div class="col-sm-12 form-inline topMarginOnly zeroPadding">
                     <div class="col-sm-12">
                         <label>Actors:</label>
                         <span asp-validation-for="@Model.AllActors" class="text-danger"></span>
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"> Select Actors </button>
-                        <ul class="dropdown-menu">
+                        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"> Select Actors </button>
+                        <ul class="dropdown-menu fixed-maxheight auto-scroll">
                             @for (var i = 0; i < Model.AllActors.Count; i++)
                             {
                                 <li style="padding:3px 10px 3px 10px;">
@@ -55,23 +60,14 @@
                                     <input type="hidden" asp-for="@Model.AllActors[i].FullName" />
                                 </li>
                             }
-
-                            @foreach (var actor in Model.AllActors)
-                            {/*
-                                <li style="padding:3px 10px 3px 10px;">
-                                    <input style="width:15px;height:15px" type="checkbox" value="@actor.Id" asp-for="@Model.ActorIds" />&nbsp;@actor.FullName
-                                </li>
-                                */
-                            }
                         </ul>
-
-                        <button class="btn-sm btn-info">Add New</button>
+                        <button class="btn-sm btn-info" id="btnAddActor">Add New</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="text-right" style="border:2px solid green;">
+        <div class="text-right">
             <input class="btn-sm btn-success" type="submit" style="width:100px;margin-top:10px;" />
             <input class="btn-sm btn-warning" type="reset" style="width:100px;margin-top:10px;" />
         </div>
