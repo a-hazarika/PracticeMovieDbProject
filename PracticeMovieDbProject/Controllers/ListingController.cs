@@ -90,10 +90,16 @@ namespace PracticeMovieDbProject.Controllers
             return View(listingResult);
         }
 
-        [Route("Listing/Error/{code:int}")]
-        public IActionResult Error(int code)
+        [Route("Listing/Error/{code:int?}")]
+        public IActionResult Error(int code, string message = null)
         {
-            return Content("OOPs..." + code);
+            var model = new ErrorViewModel()
+            {
+                ErrorCode = code,
+                ErrorMessage = message
+            };
+
+            return View(model);
         }
     }
 }

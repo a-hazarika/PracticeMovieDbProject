@@ -19,38 +19,87 @@ namespace MovieServices
 
         public void Add(Actor newActor)
         {
+            ValidateInputs(newActor);
+
             _context.Add(newActor);
             var value = _context.SaveChanges();
         }
 
-        public int? GetActorId(string first, string middle, string last)
+        private void ValidateInputs(Actor newActor)
         {
-            if(string.IsNullOrWhiteSpace(middle))
+            var error = new StringBuilder();
+            var errorCount = 0;
+
+            if (string.IsNullOrWhiteSpace(newActor.FirstName))
             {
-                return _context.Actors
-                    .Where(x => x.FirstName == first && x.LastName == last)
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+                error.Append("First name cannot be empty\n");
+                errorCount++;
             }
 
-            return _context.Actors
-                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle)
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(newActor.LastName))
+            {
+                error.Append("Last name cannot be empty");
+                errorCount++;
+            }
+
+            if (IsActorPresent(newActor))
+            {
+                error.Append("Actor already present");
+                errorCount++;
+            }
+
+            if (errorCount > 0)
+            {
+                throw new ArgumentException(error.ToString());
+            }
         }
 
-        public int? GetActorId(string first, string middle, string last, DateTime dob)
+        public void AddBatch(List<Actor> actors)
+        {
+            foreach (var actor in actors)
+            {
+                ValidateInputs(actor);
+
+                _context.Add(actor);
+            }
+
+            var value = _context.SaveChanges();
+        }
+
+        public bool IsActorPresent(Actor actor)
+        {
+            if (_context.Actors
+                .FirstOrDefault(x => x.FirstName.Equals(actor.FirstName) 
+                && x.LastName.Equals(actor.LastName) 
+                && x.DOB.Date == actor.DOB.Date
+                && x.Sex.Id == actor.Sex.Id) == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
+
+        public int? GetActorId(string first, string middle, string last, DateTime dob, Gender sex)
         {
             if (string.IsNullOrWhiteSpace(middle))
             {
                 return _context.Actors
-                    .Where(x => x.FirstName == first && x.LastName == last && x.DOB == dob)
+                    .Where(x => x.FirstName.Equals(first)
+                        && x.LastName.Equals(last)
+                        && x.DOB == dob
+                        && x.Sex.Id == sex.Id)
                     .Select(y => y.Id)
                     .FirstOrDefault();
             }
 
             return _context.Actors
-                    .Where(x => x.FirstName == first && x.LastName == last && x.MiddleName == middle && x.DOB == dob)
+                    .Where(x => x.FirstName.Equals(first)
+                        && x.LastName.Equals(last)
+                        && x.MiddleName.Equals(middle)
+                        && x.DOB == dob
+                        && x.Sex.Id == sex.Id)
                     .Select(y => y.Id)
                     .FirstOrDefault();
         }

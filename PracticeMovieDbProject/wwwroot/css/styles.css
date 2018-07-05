@@ -69,3 +69,7 @@
 .auto-scroll {
     overflow: auto;
 }
+
+.hidden {
+    visibility: hidden;
+}

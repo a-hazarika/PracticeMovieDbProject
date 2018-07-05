@@ -1,6 +1,7 @@
 ﻿@model ActorsListingViewModel
 @{
     ViewBag.Title = "Actors";
+    var age = "";
 }
 
 <div class="row">
@@ -16,7 +17,15 @@
                             <img class="squareImage" src="~/images/posters/No_Image_Available.gif" />
                         </div>
                         <div class="col-sm-10">
-                            <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id"><strong>@actor.Name</strong></a> (@actor.Sex, @actor.Age years)
+                            @if (actor.Age > 0)
+                            {
+                                age = ", " + actor.Age + " years";
+                            }
+                            else
+                            {
+                                age = "";
+                            }
+                            <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id"><strong>@actor.Name</strong></a> (@actor.Sex@age)
                         </div>
                     </div>
                 </div>

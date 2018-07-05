@@ -1,6 +1,30 @@
 ﻿@model PersonDetailsViewModel
 @{
     ViewData["Title"] = Model.Name + " Bio";
+    var age = "";
+    var visibility = "";
+    var temp = "";
+    var msg = "";
+    if (Model.Age > 0)
+    {
+        age = ", " + Model.Age + " years";
+        visibility = "";
+    }
+    else
+    {
+        visibility = "hidden";
+    }
+
+    if(Model.Movies.Any())
+    {
+        temp = "";
+        msg = "Movies";
+    }
+    else
+    {
+        temp = "hidden";
+        msg = "No movie infomation available";
+    }
 }
 
 <div class="jumbotron">
@@ -11,22 +35,26 @@
             </div>
         </div>
         <div class="col-md-8 detailPanel">
-            <p><span id="assetName">@Model.Name </span> (@Model.Sex, @Model.Age years)</p>
-            <strong>Date of birth:</strong> @Model.DOB
-            <br /><br />
+            <p><span id="assetName">@Model.Name </span> (@Model.Sex@age)</p>
+            <div class="@visibility">
+                <strong>Date of birth:</strong> @Model.DOB
+                <br /><br />
+            </div>
             <strong>Bio:</strong> <span class="textJustify">@Model.Bio</span>
             <br /><br />
-            <strong>Movies</strong>
-            <ul>
-                @{if (Model.Movies != null)
-                    {
-                        foreach (var movie in Model.Movies)
+            <strong>@msg</strong>
+            <div class="@temp">
+                <ul>
+                    @{if (Model.Movies != null)
                         {
-                            <li><a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a> (@movie.ReleaseYear)</li>
+                            foreach (var movie in Model.Movies)
+                            {
+                                <li><a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a> (@movie.ReleaseYear)</li>
+                            }
                         }
                     }
-                }
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

@@ -42,7 +42,15 @@ namespace MovieData.Models
 
         public int Age
         {
-            get { return DateTime.Now.Year - DOB.Year; }
+            get
+            {
+                if (DOB.Date == DateTime.MinValue)
+                {
+                    return -1;
+                }
+
+                return DateTime.Now.Year - DOB.Year;
+            }
         }
     }
 }

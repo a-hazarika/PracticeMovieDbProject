@@ -24,12 +24,12 @@ namespace PracticeMovieDbProject.Controllers
         private static IEnumerable<Gender> _genders;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public EditorController(IMovieService movies, 
+        public EditorController(IMovieService movies,
             IActorService actors,
-            IProducerService producers, 
+            IProducerService producers,
             IGenderService genders,
             IHostingEnvironment hostingEnvironment)
-        {   
+        {
             _movieDbService = movies;
             _actorDbService = actors;
             _producerDbService = producers;
@@ -69,7 +69,7 @@ namespace PracticeMovieDbProject.Controllers
                 movieVm.Producers = GetProducersList();
                 return View("NewMovie", movieVm);
             }
-            
+
             if (movieVm.Poster != null)
             {
                 var poster = movieVm.Poster;
@@ -145,7 +145,7 @@ namespace PracticeMovieDbProject.Controllers
 
             return View(model);
         }
-        
+
         public IActionResult NewActor()
         {
             var model = new PersonViewModel
@@ -166,9 +166,9 @@ namespace PracticeMovieDbProject.Controllers
                 personVm.SexOptions = _genders;
                 return View("NewProducer", personVm);
             }
-            
+
             var gender = _genderDbService.GetGenders().FirstOrDefault(x => x.Description == personVm.Sex);
-            var newActor = new Producer()
+            var newProducer = new Producer()
             {
                 FirstName = personVm.FirstName,
                 MiddleName = personVm.MiddleName,
@@ -178,8 +178,20 @@ namespace PracticeMovieDbProject.Controllers
                 Sex = gender
             };
 
-            _producerDbService.Add(newActor);
-            var id = _producerDbService.GetProducerId(personVm.FirstName, personVm.MiddleName, personVm.LastName);
+            try
+            {
+                _producerDbService.Add(newProducer);
+            }
+            catch (ArgumentException argEx)
+            {
+                return RedirectToAction("Error", "Listing", new { message = argEx.Message });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Listing", new { message = ex.Message });
+            }
+
+            var id = _producerDbService.GetProducerId(newProducer.FirstName, newProducer.MiddleName, newProducer.LastName, newProducer.DOB, newProducer.Sex);
 
             return RedirectToAction("Detail", "Producer", new { id = id });
         }
@@ -206,10 +218,22 @@ namespace PracticeMovieDbProject.Controllers
                 Sex = gender
             };
 
-            _actorDbService.Add(newActor);
-            var id = _actorDbService.GetActorId(personVm.FirstName, personVm.MiddleName, personVm.LastName);
+            try
+            {
+                _actorDbService.Add(newActor);
+            }
+            catch (ArgumentException argEx)
+            {
+                return RedirectToAction("Error", "Listing", new { message = argEx.Message });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Listing", new { message = ex.Message });
+            }
+
+            var id = _actorDbService.GetActorId(newActor.FirstName, newActor.MiddleName, newActor.LastName, newActor.DOB, newActor.Sex);
 
             return RedirectToAction("Detail", "Actor", new { id = id });
         }
-    }    
+    }
 }
