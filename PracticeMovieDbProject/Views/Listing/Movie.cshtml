@@ -1,18 +1,29 @@
 ﻿@model ViewMovieViewModel
 @{
     ViewBag.Title = Model.Movie.Name;
+    var releaseYear = "";
+    if (Model.Movie.ReleaseYear > 0)
+    {
+        releaseYear = "(" + Model.Movie.ReleaseYear + ") ";
+    }
+
+    var moviePoster = "/images/posters/No_Image_Available.gif";
+    if(!string.IsNullOrWhiteSpace(Model.Movie.PosterUrl))
+    {
+        moviePoster = "/images/" + Model.Movie.PosterUrl;
+    }
 }
 
 <div class="jumbotron">
     <div class=" row">
         <div class="col-md-4">
             <div>
-                <img class="squareImage" src="~/images/@Model.Movie.PosterUrl" alt="@Model.Movie.Name" />
+                <img class="squareImage" src="@moviePoster" alt="@Model.Movie.Name" />
             </div>
         </div>
         <div class="col-md-8 detailPanel">
             <p>
-                <span class="movieHeader">@Model.Movie.Name </span> (@Model.Movie.ReleaseYear)                
+                <span class="movieHeader">@Model.Movie.Name </span>  @releaseYear
                 <a asp-controller="Listing" asp-action="Edit" asp-route-id="@Model.Movie.Id">
                     <button class="btn btn-sm btn-info">Edit</button>
                 </a>

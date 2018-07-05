@@ -18,10 +18,13 @@ namespace MovieServices
 
         public void Add(Movie newMovie)
         {
+            ValidateEntry(newMovie);
+            SanitizeInput(newMovie);
+
             _context.Add(newMovie);
             _context.SaveChanges();
-        }        
-                
+        }
+
         public Movie GetById(int id)
         {
             return GetAll().FirstOrDefault(x => x.Id == id);
@@ -40,17 +43,19 @@ namespace MovieServices
         }
 
         public int? GetMovieId(string name, int? releaseYear)
-        {   
-            if(!releaseYear.HasValue)
+        {
+            name = SanitizeInput(name);
+
+            if (!releaseYear.HasValue)
             {
                 return _context.Movies
-                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)
+                    .Where(x => x.Name == name)?
                     .Select(y => y.Id)
-                    .Last();
+                    .FirstOrDefault();
             }
 
             return _context.Movies
-                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)
+                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)?
                     .Select(y => y.Id)
                     .FirstOrDefault();
         }
@@ -79,5 +84,52 @@ namespace MovieServices
             var producer = _context.Movies.FirstOrDefault(x => x.Id == movieId).Producer;
             return producer;
         }
+
+        #region Supporting Methods
+
+        private void ValidateEntry(Movie newMovie)
+        {
+            if (string.IsNullOrWhiteSpace(newMovie.Name))
+            {
+                throw new ArgumentException("Movie name was empty");
+            }
+
+            var maxYear = DateTime.Now.Year + 10;
+            var minYear = 1800;
+            if (newMovie.ReleaseYear.HasValue && (newMovie.ReleaseYear.Value < minYear || newMovie.ReleaseYear.Value > maxYear))
+            {
+                if (newMovie.ReleaseYear.Value.ToString().Length != 4)
+                {
+                    throw new ArgumentException("Release year should be in the format (YYYY). Ex: 2018");
+                }
+
+                throw new ArgumentException($"Release year should be between {minYear} and {maxYear}");
+            }
+
+            var id = GetMovieId(newMovie.Name, newMovie.ReleaseYear);
+
+            if (id > 0)
+            {
+                if (newMovie.ReleaseYear.HasValue)
+                {
+                    throw new ArgumentException("Name", "Movie already exists in database with same release year");
+                }
+
+                throw new ArgumentException("Name", "Movie already exists in database");
+            }
+        }
+
+        public void SanitizeInput(Movie movie)
+        {
+            movie.Name = movie.Name.Trim();
+            movie.Plot = movie.Plot?.Trim();
+        }
+
+        public string SanitizeInput(string input)
+        {
+            return input?.Trim();
+        }
+
+        #endregion
     }
 }

@@ -1,6 +1,12 @@
 ﻿@model EditMovieViewModel
 @{
     ViewBag.Title = "Edit Movie - " + Model.Movie.Name;
+
+    var moviePoster = "/images/posters/No_Image_Available.gif";
+    if (!string.IsNullOrWhiteSpace(Model.Movie.PosterUrl))
+    {
+        moviePoster = "/images/" + Model.Movie.PosterUrl;
+    }
 }
 
 <h3 class="text-muted">Edit <strong>@Model.Movie.Name</strong></h3>
@@ -8,7 +14,7 @@
 <div class="row">
     <form method="post">
         <div class="col-sm-2 col-xs-12" style="border:2px solid red">
-            <img src="~/images/@Model.Movie.PosterUrl" alt="@Model.Movie.Name" style="padding-top:10px; width:100%; min-width:100px;">
+            <img src="@moviePoster" alt="@Model.Movie.Name" style="padding-top:10px; width:100%; min-width:100px;">
             <label class="btn btn-sm btn-info" style="width:100%; min-width:100px;">
                 Change <input type="file" style="display:none;">
             </label>

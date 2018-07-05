@@ -19,18 +19,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-10 col-xs-12 topMarginOnly">
-                    <label asp-for="@Model.Name"></label> <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                <div class="col-sm-8 topMarginOnly">
+                    <label asp-for="@Model.Name"></label> 
+                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
                     <input class="form-control" asp-for="@Model.Name">
                 </div>
-                <div class="col-sm-2 topMarginOnly">
-                    <label asp-for="@Model.ReleaseYear"></label>
-                    <input class="form-control" asp-for="@Model.ReleaseYear">
+                <div class="col-sm-4 topMarginOnly">
+                    <label asp-for="@Model.ReleaseYear"></label> (Ex: 2018) 
+                    <span asp-validation-for="@Model.ReleaseYear" class="text-danger"></span>
+                    <input class="form-control" asp-for="@Model.ReleaseYear" placeholder="YYYY">
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 topMarginOnly">
-                    <label asp-for="@Model.Plot"> </label> <span asp-validation-for="@Model.Plot" class="text-danger"></span>
+                    <label asp-for="@Model.Plot"> </label> 
+                    <span asp-validation-for="@Model.Plot" class="text-danger"></span>
                     <textarea asp-for="@Model.Plot" class="form-control" style="height:150px" rows="5"></textarea>
                 </div>
             </div>

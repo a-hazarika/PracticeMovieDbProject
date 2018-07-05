@@ -69,7 +69,7 @@ namespace PracticeMovieDbProject.Controllers
                 Age = producer.Age,
                 Bio = producer.Bio,
                 Sex = producer.Sex.Description,
-                Movies = _actorDbService.GetActorMovies(id)
+                Movies = _producerDbService.GetProducerMovies(id)
             };
 
             return View(model);

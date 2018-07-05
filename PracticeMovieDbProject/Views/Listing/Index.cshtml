@@ -44,16 +44,33 @@
                 <tbody>
                     @foreach (var movie in Model.Movies)
                     {
+                        var releaseYear = "";
+                        if (movie.ReleaseYear > 0)
+                        {
+                            releaseYear = "(" + movie.ReleaseYear + ") ";
+                        }
+                        else
+                        {
+                            releaseYear = "";
+                        }
                     <tr class="movieRow">
                         <td>
+                            @{
+                                var moviePoster = "/images/posters/No_Image_Available.gif";
+                                if (!string.IsNullOrWhiteSpace(movie.PosterUrl))
+                                {
+                                    moviePoster = "/images/" + movie.PosterUrl;
+                                }
+                            }
+
                             <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">
-                                <img src="~/images/@movie.PosterUrl" class="rectangularImage" />
+                                <img src="@moviePoster" class="rectangularImage" />
                             </a>
                         </td>
                         <td>
                             <div>
                                 <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a>
-                                <span class="textLarge"> (@movie.ReleaseYear)</span>
+                                <span class="textLarge"> @releaseYear</span>
                             </div>
                             <div> @movie.Plot </div>
                             <div class="topMarginOnly">

@@ -49,7 +49,12 @@
                         {
                             foreach (var movie in Model.Movies)
                             {
-                                <li><a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a> (@movie.ReleaseYear)</li>
+                                var releaseYear = "";
+                                if (movie.ReleaseYear > 0)
+                                {
+                                    releaseYear = "(" + movie.ReleaseYear + ") ";
+                                }
+                                <li><a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a> @releaseYear</li>
                             }
                         }
                     }

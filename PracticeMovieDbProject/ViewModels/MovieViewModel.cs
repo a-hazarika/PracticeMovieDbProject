@@ -26,7 +26,6 @@ namespace PracticeMovieDbProject.ViewModels
         [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Required")]
         [Display(Name = "Plot")]
         public string Plot { get; set; }
 

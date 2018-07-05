@@ -30,6 +30,7 @@ namespace PracticeMovieDbProject
             services.AddScoped<IActorService, ActorDbService>();
             services.AddScoped<IProducerService, ProducerDbService>();
             services.AddScoped<IGenderService, GenderDbService>();
+            services.AddScoped<IMappingService, MappingService>();
             services.AddDbContext<MovieDbContext>(options
                 => options.UseSqlServer(
                     Configuration.GetConnectionString("MovieDbConnection")));
