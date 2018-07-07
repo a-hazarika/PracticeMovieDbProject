@@ -28,18 +28,24 @@ namespace PracticeMovieDbProject.ViewModels
 
         [Display(Name = "Sex")]
         public virtual IEnumerable<Gender> SexOptions { get; set; }
-
-        [Required(ErrorMessage = "Required")]
+                
         [Display(Name = "Bio")]
         public string Bio { get; set; }
-
-        [Required(ErrorMessage = "Required")]
+                
         [DataType(DataType.Date)]
         [Display(Name = "Date of birth")]
         public DateTime DOB { get; set; }
 
         [Required(ErrorMessage = "Required")]
         public string Sex { get; set; }
+
         public PersonType PersonType { get; set; }
+
+        public PersonViewModel() { }
+
+        public PersonViewModel(IEnumerable<Gender> genders)
+        {
+            SexOptions = genders;
+        }
     }
 }

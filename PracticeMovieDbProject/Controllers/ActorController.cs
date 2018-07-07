@@ -26,7 +26,7 @@ namespace PracticeMovieDbProject.Controllers
         public IActionResult Index()
         {
             var actors = _actorDbService.GetAll();
-
+            
             if (actors == null)
             {
                 return RedirectToAction("Error", "Listing");

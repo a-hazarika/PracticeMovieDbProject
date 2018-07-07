@@ -28,7 +28,7 @@ namespace PracticeMovieDbProject.Controllers
         public IActionResult Index()
         {
             var moviesListing = _movieDbService.GetAll().OrderByDescending(x => x.Id);
-                        
+
             var listingResult = moviesListing
                 .Select(result => new MovieViewModel
                 {
@@ -56,7 +56,7 @@ namespace PracticeMovieDbProject.Controllers
 
             if (movie == null)
             {
-                return Error(404);
+                return View("Error", new ErrorViewModel(404, "Requested information could not be found"));
             }
 
             var model = new ViewMovieViewModel
@@ -74,17 +74,18 @@ namespace PracticeMovieDbProject.Controllers
             var actors = _actorDbService.GetAll().OrderBy(x => x.FirstName);
             var genders = _genderDbService.GetGenders();
 
-            if(movie == null || producers == null || actors == null || genders == null)
+            if (movie == null || producers == null || actors == null || genders == null)
             {
-                return Error(404);
+                return View("Error", new ErrorViewModel(404, "Requested information could not be found"));
             }
 
             var listingResult = new EditMovieViewModel()
             {
-               Movie = movie,
-               Actors = actors,
-               Producers = producers,
-               Sex = genders
+                Movie = movie,
+                Actors = actors,
+                Producers = producers,
+                Sex = genders,
+                PersonViewModel = new PersonViewModel(genders)
             };
 
             return View(listingResult);
@@ -93,11 +94,15 @@ namespace PracticeMovieDbProject.Controllers
         [Route("Listing/Error/{code:int?}")]
         public IActionResult Error(int code, string message = null)
         {
-            var model = new ErrorViewModel()
+            if (code == 0)
             {
-                ErrorCode = code,
-                ErrorMessage = message
-            };
+                code = 404;
+            }
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                message = "Requested information could not be found";
+            }
+            var model = new ErrorViewModel(code, message);
 
             return View(model);
         }

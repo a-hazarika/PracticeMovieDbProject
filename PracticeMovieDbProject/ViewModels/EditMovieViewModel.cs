@@ -12,5 +12,6 @@ namespace PracticeMovieDbProject.ViewModels
         public IEnumerable<Producer> Producers { get; set; }
         public IEnumerable<Actor> Actors { get; set; }
         public IEnumerable<Gender> Sex { get; set; }
+        public PersonViewModel PersonViewModel { get; set; }
     }
 }

@@ -1,0 +1,97 @@
+﻿@model PersonViewModel
+
+<div class="padded">
+    <div class="row padded">        
+        <strong class="text-muted">Add Producer</strong>
+
+    </div>
+    <div class="row">
+        <div class="col-md-9 col-sm-12" style="border:1px solid red">
+            <form onsubmit="process">
+
+                <div class="row">
+                    <div class="col-sm-4 padded">
+                        <div class="col-sm">
+                            <label> First Name </label><span class="text-danger">*</span>
+                            <span id="pFNameReq" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" id="pFName" placeholder="First Name" class="widthFull" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 padded">
+                        <div class="col-sm">
+                            <label> MiddleName </label>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" id="pMName" placeholder="Middle Name" class="widthFull" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 padded">
+                        <div class="col-sm">
+                            <label> Last Name </label><span class="text-danger">*</span>
+                            <span id="pLNameReq" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" id="pLName" placeholder="Last Name" class="widthFull" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 padded">
+                        <div class="col-sm">
+                            <label> Date of Birth </label>
+                            <span id="pDobReq" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm">
+                            <input type="date" id="pDob" class="widthFull" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 padded">
+                        <div class="col-sm">
+                            <label> Sex </label><span class="text-danger">*</span>
+                            <span id="pSexReq" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm">
+                            @foreach (var gender in Model.SexOptions)
+                            {
+                            <label class="radio-inline">
+                                <input type="radio" asp-for="@Model.Sex" class="radio-inline" value="@gender.Description" />@gender.Description
+                            </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 padded">
+                        <div class="col-sm">
+                            <label> Bio </label>
+                        </div>
+                        <div class="col-sm">
+                            <textarea rows="5" id="pBio" class="widthFull"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row padded">
+                    <button type="button" onclick="addNewProducer()" class="btn btn-info btn-sm">Add</button>
+                    <button type="reset" class="btn btn-info btn-sm">Reset</button>
+                    <button type="button" onclick="hideProducerDiv()" class="btn btn-info btn-sm">Close</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Display new producers that are being added -->
+        <div class="col-md-3 col-sm-12 left-grey-borderline background-floralwhite">
+            Hello
+            <div id="pItemListDiv">
+                <ul id="producerItem">
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

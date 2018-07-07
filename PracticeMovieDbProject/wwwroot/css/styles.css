@@ -63,13 +63,40 @@
     background-color: lightgrey;
 }
 
-.fixed-maxheight{
-    max-height:400px;
+.fixed-maxheight {
+    max-height: 400px;
 }
+
 .auto-scroll {
     overflow: auto;
 }
 
 .hidden {
     visibility: hidden;
+}
+
+.roundedRedBorderBox {
+    border-radius: 10px;
+    border: 1px solid red;
+}
+
+.left-grey-borderline {
+    border-left: 1px solid grey;
+}
+
+.background-powderBlue {
+    background-color: powderblue;
+}
+
+.background-antiquewhite {
+    background-color: antiquewhite;
+}
+
+.background-floralwhite {
+    background-color: floralwhite;
+}
+
+#addProducerDiv
+{
+    display:none;
 }
