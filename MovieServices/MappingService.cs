@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using MovieData;
 using MovieData.Models;
 
@@ -15,7 +17,7 @@ namespace MovieServices
             _context = context;
         }
 
-        public void AddBatchMovieActorMap(Movie movie, List<Actor> actors)
+        public int AddBatchMovieActorMap(Movie movie, List<Actor> actors)
         {
             if (movie == null)
             {
@@ -29,19 +31,26 @@ namespace MovieServices
 
             foreach (var actor in actors)
             {
+                if (actor == null)
+                {
+                    continue;
+                }
+
                 var movieActorMapping = new MovieActorMapping
                 {
                     Movie = movie,
                     Actor = actor
                 };
 
-                _context.Add(movieActorMapping);
+                _context.MovieActorMappings.Add(new MovieActorMapping() { MovieId = movie.Id, ActorId = actor.Id });
             }
 
-            _context.SaveChanges();
+            var records = _context.SaveChanges();
+
+            return records;
         }
 
-        public void AddMovieActorMap(Movie movie, Actor actor)
+        public int AddMovieActorMap(Movie movie, Actor actor)
         {
             if (movie == null)
             {
@@ -60,10 +69,13 @@ namespace MovieServices
             };
 
             _context.Add(movieActorMapping);
-            _context.SaveChanges();
+
+            var records = _context.SaveChanges();
+
+            return records;
         }
 
-        public void AddMovieProducerMap(Movie movie, Producer producer)
+        public int AddMovieProducerMap(Movie movie, Producer producer)
         {
             if (movie == null)
             {
@@ -82,7 +94,35 @@ namespace MovieServices
             };
 
             _context.Add(movieProducerMapping);
-            _context.SaveChanges();
+
+            var records = _context.SaveChanges();
+
+            return records;
+        }
+
+        public int RemoveBatchMovieActorsMap(int movieId, List<int> actorIds)
+        {
+            var cmd = new StringBuilder();
+
+            var pairs = _context.MovieActorMappings.Include(x => x.Movie).Include(x => x.Actor).Where(x => x.Movie.Id == movieId);
+
+            _context.MovieActorMappings.RemoveRange(pairs.Where(x => actorIds.Contains(x.Actor.Id)));
+            var j = _context.SaveChanges();
+            return j;
+        }
+
+        public int RemoveMovieActorMap(int movieId, int actorId)
+        {
+            var records = _context.Database.ExecuteSqlCommand($"Delete MovieActorMappings where MovieId = {movieId} and ActorId = {actorId}");
+
+            return records;
+        }
+
+        public int RemoveMovieProducerMap(int movieId, int producerId)
+        {
+            var records = _context.Database.ExecuteSqlCommand($"Delete MovieProducerMappings where MovieId = {movieId} and ProducerId = {producerId}");
+
+            return records;
         }
     }
 }

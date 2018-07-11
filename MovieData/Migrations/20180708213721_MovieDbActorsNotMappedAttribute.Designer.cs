@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieData;
 
 namespace MovieData.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180708213721_MovieDbActorsNotMappedAttribute")]
+    partial class MovieDbActorsNotMappedAttribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,9 +98,9 @@ namespace MovieData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActorId");
+                    b.Property<int?>("ActorId");
 
-                    b.Property<int>("MovieId");
+                    b.Property<int?>("MovieId");
 
                     b.HasKey("Id");
 
@@ -177,13 +179,11 @@ namespace MovieData.Migrations
                 {
                     b.HasOne("MovieData.Models.Actor", "Actor")
                         .WithMany()
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ActorId");
 
                     b.HasOne("MovieData.Models.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MovieId");
                 });
 
             modelBuilder.Entity("MovieData.Models.MovieProducerMapping", b =>

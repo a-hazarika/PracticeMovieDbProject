@@ -17,16 +17,19 @@ namespace MovieServices
             _context = context;
         }
 
-        public void Add(Producer newProducer)
+        public int Add(Producer newProducer)
         {
             ValidateInputs(newProducer);
             SanitizeInput(newProducer);
 
             _context.Add(newProducer);
-            _context.SaveChanges();
+
+            var newEntries = _context.SaveChanges();
+
+            return newEntries;
         }
 
-        public void AddBatch(List<Producer> producers)
+        public int AddBatch(List<Producer> producers)
         {
             foreach (var producer in producers)
             {
@@ -36,7 +39,9 @@ namespace MovieServices
                 _context.Add(producer);
             }
 
-            var value = _context.SaveChanges();
+            var newEntries = _context.SaveChanges();
+
+            return newEntries;
         }
 
         public Producer GetById(int id)
@@ -44,37 +49,42 @@ namespace MovieServices
             return GetAll().FirstOrDefault(x => x.Id == id);
         }
 
-        public int? GetProducerId(string first, string middle, string last, DateTime dob, Gender sex)
+        public Producer GetProducer(string first, string middle, string last, DateTime dob, Gender sex)
         {
             first = SanitizeInput(first);
             middle = SanitizeInput(middle);
             last = SanitizeInput(last);
+            dob = dob.Date;
 
-            if (string.IsNullOrWhiteSpace(middle))
+            if (!string.IsNullOrWhiteSpace(middle) && dob != null)
             {
                 return _context.Producers
-                    .Where(x => x.FirstName.Equals(first)
-                        && x.LastName.Equals(last)
-                        && x.DOB.Date == dob.Date
-                        && x.Sex.Id == sex.Id)?
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.FirstName.Equals(first)
+                     && x.LastName.Equals(last)
+                     && x.MiddleName.Equals(middle)
+                     && x.DOB.Date == dob
+                     && x.Sex.Id == sex.Id);
+            }
+            else if (dob != null)
+            {
+                return _context.Producers
+                   .FirstOrDefault(x => x.FirstName.Equals(first)
+                    && x.LastName.Equals(last)
+                    && x.DOB.Date == dob
+                    && x.Sex.Id == sex.Id);
             }
 
             return _context.Producers
-                    .Where(x => x.FirstName.Equals(first)
-                        && x.LastName.Equals(last)
-                        && x.MiddleName.Equals(middle)
-                        && x.DOB == dob
-                        && x.Sex.Id == sex.Id)?
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+               .FirstOrDefault(x => x.FirstName.Equals(first)
+                && x.LastName.Equals(last)
+                && x.MiddleName.Equals(middle)
+                && x.Sex.Id == sex.Id);
         }
 
         public IEnumerable<Producer> GetAll()
         {
             return _context.Producers.Include(x => x.Sex);
-        }        
+        }
 
         public IEnumerable<Movie> GetProducerMovies(int producerId)
         {
@@ -98,17 +108,12 @@ namespace MovieServices
 
         public bool IsProducerPresent(Producer producer)
         {
-            if (_context.Producers
-                .FirstOrDefault(
-                x => x.FirstName.Equals(producer.FirstName)
-                && x.LastName.Equals(producer.LastName)
-                && x.DOB.Date == producer.DOB.Date
-                && x.Sex.Id == producer.Sex.Id) == null)
+            if (producer == null)
             {
                 return false;
             }
 
-            return true;
+            return GetProducer(producer.FirstName, producer.MiddleName, producer.LastName, producer.DOB, producer.Sex) != null;
         }
 
         private void ValidateInputs(Producer producer)

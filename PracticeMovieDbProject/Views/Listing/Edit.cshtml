@@ -1,11 +1,18 @@
-﻿@model EditMovieViewModel
-@{
-    ViewBag.Title = "Edit Movie - " + Model.Movie.Name;
+﻿@model MovieViewModel
+@{    
+    var title = "Edit - " + Model.MovieName;
+
+    if (Model.Id == 0)
+    {
+        title = "Add Movie";
+    }
+
+    ViewBag.Title = title;
 
     var moviePoster = "/images/posters/No_Image_Available.gif";
-    if (!string.IsNullOrWhiteSpace(Model.Movie.PosterUrl))
+    if (!string.IsNullOrWhiteSpace(Model.CurrentPoster))
     {
-        moviePoster = "/images/" + Model.Movie.PosterUrl;
+        moviePoster = "/images/" + Model.CurrentPoster;
     }
 }
 @section Scripts
@@ -13,105 +20,154 @@
     <script src="@Url.Content("~/js/addNewPerson.js")"></script>
 }
 
-<h3 class="text-muted">Edit <strong>@Model.Movie.Name</strong></h3>
+<h3 class="text-muted"><strong>@title</strong></h3>
 
 <div class="row">
-    <form>
-        <div class="col-sm-2 col-xs-12" style="border:2px solid red">
-            <img src="@moviePoster" alt="@Model.Movie.Name" style="padding-top:10px; width:100%; min-width:100px;">
-            <label class="btn btn-sm btn-info" style="width:100%; min-width:100px;">
-                Change <input type="file" style="display:none;">
+    <form method="post" enctype="multipart/form-data">
+        <div class="col-sm-2 col-xs-12">
+            <img class="image-contained" src="@moviePoster" alt="@Model.MovieName">
+            <input type="hidden" asp-for="@Model.CurrentPoster" />
+            <label class="btn btn-sm btn-info fixex-minWidth">
+                Change
+                <input type="file" asp-for="@Model.Poster" style="display:none;">
             </label>
-            <label class="label-warning small" style="width:100%; min-width:100px;">
-                Only .jpg/.png files allowed.
+
+            <label class="label-warning small fixex-minWidth text-center">
+                jpg/png/gif/svg files allowed.
+                <span asp-validation-for="@Model.Poster" class="text-danger"></span>
             </label>
         </div>
-        <div class="col-sm-10 col-xs-12" style="border:2px solid red">
+        <div class="col-sm-10 col-xs-12">
             <div class="row">
+                <span asp-validation-for="@Model.GlobalError" class="text-danger"></span>
                 <div class="col-sm-10 col-xs-12">
-                    <label>Title:</label><input type="text" class="form-control" name="name" value="@Model.Movie.Name">
+                    <label>Title:</label><span class="text-danger">*</span>
+                    <span asp-validation-for="@Model.MovieName" class="text-danger"></span>
+                    <input type="text" class="form-control" asp-for="@Model.MovieName">
                 </div>
                 <div class="col-sm-2">
-                    <label>Year:</label><input type="number" class="form-control" name="year" value="@Model.Movie.ReleaseYear">
+                    <label>Year:</label>
+                    <span asp-validation-for="@Model.ReleaseYear" class="text-danger"></span>
+                    <input type="number" class="form-control" asp-for="@Model.ReleaseYear">
                 </div>
             </div>
             <div class="row topMarginOnly">
                 <div class="col-xs-12">
                     <label>Plot:</label>
-                    <textarea class="form-control" name="plot" style="height:150px">@Model.Movie.Plot</textarea>
+                    <textarea class="form-control" asp-for="@Model.Plot" rows="5">@Model.Plot</textarea>
                 </div>
             </div>
 
-
+            @*PRODUCER DIV*@
             <div class="row topMarginOnly">
                 <div class="col-sm-12 col-xs-12">
-                    <label for="producer">Producer (select one):</label>
+                    <label>Producer (select one):</label><span class="text-danger">*</span>
                     <strong><span class="text-info" id="producerAddedMsg"></span></strong>
+                    <span asp-validation-for="@Model.Producers" class="text-danger"></span>
                 </div>
 
                 <div class="col-sm-10 col-xs-12">
-                    <select class="btn btn-primary" id="producer" name="producer">
-                        @foreach (var producer in Model.Producers)
+                    <input type="hidden" id="newProducerValue" asp-for="@Model.NewProducerDetails" />
+                    <input type="hidden" asp-for="@Model.CurrentProducerId" />
+                    <select class="btn btn-primary" id="producer" asp-for="@Model.NewProducerId">
+
+                        @for (var i = 0; i < Model.Producers.Count; i++)
                         {
-                            if (producer.Id == Model.Movie.Producer.Id)
+                            if (Model.Producers[i].Id == Model.CurrentProducerId)
                             {
-                                <option selected="selected">@producer.FullName</option>
+                                <option selected="selected" value="@Model.Producers[i].Id">@Model.Producers[i].FullName</option>
                             }
                             else
                             {
-                                <option>@producer.FullName</option>
+                                <option value="@Model.Producers[i].Id">@Model.Producers[i].FullName</option>
                             }
                         }
+
                     </select>
+
                     <button type="button" class="btn-xs btn-info" id="newProducerBtn" onclick="showAddProducerDiv()">Add New</button>
                 </div>
             </div>
 
+            <div id="producerPlaceHolder">
 
-            @*Add partial view to add new producers*@
-            <div id="addProducerDiv" class="row">
-                <div class="col-sm-12 padded roundedRedBorderBox background-antiquewhite">
-                    @await Html.PartialAsync("_AddProducer", Model.PersonViewModel)
-                </div>
             </div>
 
+            @*******************************************@
+
+            @*ACTOR DIV*@
             <div class="row topMarginOnly">
                 <div class="col-sm-12 col-xs-12">
-                    <label>Actors:</label>
+                    <label>Actors:</label><span class="text-danger">*</span>
                     <strong><span class="text-info" id="actorAddedMsg"></span></strong>
+                    <span asp-validation-for="@Model.MovieActors" class="text-danger"></span>
                 </div>
 
                 <div class="col-sm-12 col-xs-12">
-                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                        Select Actors &nbsp;&nbsp;&nbsp;&nbsp;<img width="10" src="~/images/icons/angle-down-solid.svg" />
+                    <input type="hidden" id="newActorValue" asp-for="@Model.NewActorDetails" />
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                        Select Actors &nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-down" style="font-size:x-small;" aria-hidden="true"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        @foreach (var actor in Model.Actors)
+                        <li class="btn-primary" style="padding:2px 3px;text-align:center;">
+                            <label class="listText">
+                                <span >- - Select actors - -</span>
+                            </label>
+                        </li>
+
+                        @for (var i = 0; i < Model.AllActors.Count; i++)
                         {
-                            <li class="btn-primary border-thin-white" style="padding:2px 3px;">
-                                <label>
-                                    <input class="checkboxCustom" type="checkbox" value="@actor.Id" name="actorId" />
-                                    <span class="listText">@actor.FullName</span>
-                                </label>
-                            </li>
+                        <li class="btn-primary border-thin-cornflowerblue" style="padding:2px 3px;">
+
+                            @if (Model.AllActors[i].Checked)
+                            {
+                                <input class="checkboxCustom" checked type="checkbox" asp-for="@Model.AllActors[i].Checked" />
+                            }
+                            else
+                            {
+                                <input class="checkboxCustom" type="checkbox" asp-for="@Model.AllActors[i].Checked" />
+                            }
+
+                            <label asp-for="@Model.AllActors[i].Checked"> @Model.AllActors[i].FullName</label>
+                            <input type="hidden" asp-for="@Model.AllActors[i].Id" />
+                            <input type="hidden" asp-for="@Model.AllActors[i].FirstName" />
+                            <input type="hidden" asp-for="@Model.AllActors[i].MiddleName" />
+                            <input type="hidden" asp-for="@Model.AllActors[i].LastName" />
+                            <input type="hidden" asp-for="@Model.AllActors[i].Sex" />
+                            <input type="hidden" asp-for="@Model.AllActors[i].DOB" />
+                        </li>
                         }
+
                     </ul>
                     <button class="btn-xs btn-info" type="button" id="addActorBtn" onclick="showNewActorDiv()">Add New</button>
                 </div>
 
             </div>
 
-            @*Add partial view to add new actors*@
-            <div id="addActorDiv" class="row">
-                <div class="col-sm-12 padded roundedRedBorderBox background-antiquewhite">
-                    @await Html.PartialAsync("_AddActor", Model.PersonViewModel)
-                </div>
+            <div id="actorPlaceHolder">
+
             </div>
 
         </div>
 
-        <div class="text-right" style="border:2px solid green;">
+        <div class="text-right">
             <input class="btn-sm btn-primary" type="submit" style="width:100px;margin-top:10px;" />
         </div>
     </form>
+
+
+    @*Add partial view to add new producers*@
+    <div id="addProducerDiv" class="row">
+        <div class="col-sm-12 padded roundedRedBorderBox background-ghostwhite-with-shadow">
+            @await Html.PartialAsync("_AddProducer", Model.PersonViewModel)
+        </div>
+    </div>
+
+    @*Add partial view to add new actors*@
+    <div id="addActorDiv" class="row">
+        <div class="col-sm-12 padded roundedRedBorderBox background-ghostwhite-with-shadow">
+            @await Html.PartialAsync("_AddActor", Model.PersonViewModel)
+        </div>
+    </div>
+    @*******************************************@
 </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using MovieData.Models;
 
@@ -15,10 +16,13 @@ namespace PracticeMovieDbProject.ViewModels
 
     public class PersonViewModel
     {
+        public int Id { get; set; }
+        public int Key { get; set; }
+
         [Required(ErrorMessage = "Required")]
-        [Display(Name = "First Name")]        
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
-        
+
         [Display(Name = "Middle Name")]
         public string MiddleName { get; set; }
 
@@ -28,10 +32,10 @@ namespace PracticeMovieDbProject.ViewModels
 
         [Display(Name = "Sex")]
         public virtual IEnumerable<Gender> SexOptions { get; set; }
-                
+
         [Display(Name = "Bio")]
         public string Bio { get; set; }
-                
+
         [DataType(DataType.Date)]
         [Display(Name = "Date of birth")]
         public DateTime DOB { get; set; }

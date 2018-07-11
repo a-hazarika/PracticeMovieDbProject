@@ -7,13 +7,14 @@
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
             <img src="~/images/posters/Black Panther.jpg" alt="Black Panther" class="img-responsive" />    
             <div class="carousel-caption" role="option">
                 <p>
-                    <h1>Black Panther</h1>
+                    <h1 class="text-info">Black Panther</h1>
                 </p>
             </div>
         </div>
@@ -21,7 +22,7 @@
             <img src="~/images/posters/Jurassic World - Fallen Kingdom.jpg" alt="Jurassic World - Fallen Kingdom" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    <h1>Jurassic World - Fallen Kingdom</h1>
+                    <h1 class="text-info">Jurassic World - Fallen Kingdom</h1>
                 </p>
             </div>
         </div>
@@ -69,13 +70,13 @@
                         </td>
                         <td>
                             <div>
-                                <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.Name</a>
+                                <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.MovieName</a>
                                 <span class="textLarge"> @releaseYear</span>
                             </div>
                             <div> @movie.Plot </div>
                             <div class="topMarginOnly">
                                 <span class="boldGrayText">Producer: </span>
-                                <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.ProducerId">@movie.ProducerName</a>
+                                <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.CurrentProducerId">@movie.ProducerName</a>
                             </div>
                             <div>
                                 <span class="boldGrayText">Actors: </span>

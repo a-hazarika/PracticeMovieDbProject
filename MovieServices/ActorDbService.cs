@@ -17,16 +17,17 @@ namespace MovieServices
             _context = context;
         }
 
-        public void Add(Actor newActor)
+        public int Add(Actor newActor)
         {
             ValidateInputs(newActor);
             SanitizeInput(newActor);
 
             _context.Add(newActor);
-            var value = _context.SaveChanges();
-        }        
+            var newRecords = _context.SaveChanges();
+            return newRecords;
+        }
 
-        public void AddBatch(List<Actor> actors)
+        public int AddBatch(List<Actor> actors)
         {
             foreach (var actor in actors)
             {
@@ -36,7 +37,8 @@ namespace MovieServices
                 _context.Add(actor);
             }
 
-            var value = _context.SaveChanges();
+            var newRecords = _context.SaveChanges();
+            return newRecords;
         }
 
         public Actor GetById(int id)
@@ -44,31 +46,36 @@ namespace MovieServices
             return GetAll().FirstOrDefault(x => x.Id == id);
         }
 
-        public int? GetActorId(string first, string middle, string last, DateTime dob, Gender sex)
+        public Actor GetActor(string first, string middle, string last, DateTime dob, Gender sex)
         {
             first = SanitizeInput(first);
             middle = SanitizeInput(middle);
             last = SanitizeInput(last);
+            dob = dob.Date;
 
-            if (string.IsNullOrWhiteSpace(middle))
+            if (!string.IsNullOrWhiteSpace(middle) && dob != null)
             {
                 return _context.Actors
-                    .Where(x => x.FirstName.Equals(first)
-                        && x.LastName.Equals(last)
-                        && x.DOB == dob
-                        && x.Sex.Id == sex.Id)?
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.FirstName.Equals(first)
+                     && x.LastName.Equals(last)
+                     && x.MiddleName.Equals(middle)
+                     && x.DOB.Date == dob
+                     && x.Sex.Id == sex.Id);
+            }
+            else if (dob != null)
+            {
+                return _context.Actors
+                   .FirstOrDefault(x => x.FirstName.Equals(first)
+                    && x.LastName.Equals(last)
+                    && x.DOB.Date == dob
+                    && x.Sex.Id == sex.Id);
             }
 
             return _context.Actors
-                    .Where(x => x.FirstName.Equals(first)
-                        && x.LastName.Equals(last)
-                        && x.MiddleName.Equals(middle)
-                        && x.DOB == dob
-                        && x.Sex.Id == sex.Id)
-                    .Select(y => y.Id)?
-                    .FirstOrDefault();
+               .FirstOrDefault(x => x.FirstName.Equals(first)
+                && x.LastName.Equals(last)
+                && x.MiddleName.Equals(middle)
+                && x.Sex.Id == sex.Id);
         }
 
         public IEnumerable<Movie> GetActorMovies(int actorId)
@@ -92,7 +99,7 @@ namespace MovieServices
         public IEnumerable<Actor> GetAll()
         {
             return _context.Actors.Include(x => x.Sex);
-        }        
+        }
 
         #region Supporting Methods
 
@@ -124,18 +131,15 @@ namespace MovieServices
                 throw new ArgumentException(error.ToString());
             }
         }
+
         public bool IsActorPresent(Actor actor)
         {
-            if (_context.Actors
-                .FirstOrDefault(x => x.FirstName.Equals(actor.FirstName)
-                && x.LastName.Equals(actor.LastName)
-                && x.DOB.Date == actor.DOB.Date
-                && x.Sex.Id == actor.Sex.Id) == null)
+            if(actor == null)
             {
                 return false;
             }
 
-            return true;
+            return GetActor(actor.FirstName, actor.MiddleName, actor.LastName, actor.DOB, actor.Sex) != null;
         }
 
         public void SanitizeInput(Actor actor)
@@ -152,8 +156,6 @@ namespace MovieServices
         }
 
         #endregion
-
-
 
     }
 }

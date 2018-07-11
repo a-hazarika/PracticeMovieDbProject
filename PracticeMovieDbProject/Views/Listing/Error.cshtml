@@ -1,4 +1,4 @@
-﻿@model  ErrorViewModel
+﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
@@ -6,4 +6,10 @@
 <h3 class="text-muted">Something went wrong !</h3>
 <p> Error code: @Model.ErrorCode</p>
 <p> Error message: @Model.ErrorMessage</p>
+
+<br />
+Return to 
+<a asp-controller="Listing" asp-action="Index">
+    Home
+</a>
 

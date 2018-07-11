@@ -90,8 +90,8 @@ namespace PracticeMovieDbProject.Controllers
             }
 
             // Get and validate producer
-            movieVm.Producer = _producerDbService.GetById(movieVm.ProducerId);
-            if (movieVm.Producer == null)
+            movieVm.NewProducer = _producerDbService.GetById(movieVm.NewProducerId);
+            if (movieVm.NewProducer == null)
             {
                 ReloadProducersAndActors(movieVm);
                 ModelState.AddModelError("Producer", "No producer specified for movie");
@@ -104,16 +104,16 @@ namespace PracticeMovieDbProject.Controllers
             {
                 actors = GetActorIdsOfSelectedActors(movieVm.AllActors);
 
-                if (actors == null || actors.Count < 1)
+                if (actors == null || !actors.Any())
                 {
                     ReloadProducersAndActors(movieVm);
                     ModelState.AddModelError("AllActors", "No actors specified for movie");
                     return View("NewMovie", movieVm);
                 }
             }
-            
+
             // Check if movie already exists with same name and release year
-            if (MovieAlreadyExists(movieVm.Name, movieVm.ReleaseYear))
+            if (MovieAlreadyExists(movieVm.MovieName, movieVm.ReleaseYear))
             {
                 ReloadProducersAndActors(movieVm);
 
@@ -139,31 +139,33 @@ namespace PracticeMovieDbProject.Controllers
                     return View("NewMovie", movieVm);
                 }
                 //Better to save poster only after sql data is saved successfully in movie table
-                movieVm.PosterUrl = await SavePosterAsync(movieVm.Poster);                
+                movieVm.PosterUrl = await SavePosterAsync(movieVm.Poster);
             }
 
             // Prepare movie object
             var newMovie = PrepareMovie(movieVm);
 
             // Add movie to database
-            int? movieId;
+            //int? movieId;
             try
             {
-                //Add check for movie name and release year
+                //TODO - Add check for movie name and release year
                 _movieDbService.Add(newMovie);
-                movieId = _movieDbService.GetMovieId(newMovie.Name, newMovie.ReleaseYear);
-                newMovie.Id = movieId.Value;
-                
+                var movie = _movieDbService.GetMovie(newMovie.Name, newMovie.ReleaseYear);
+
+                if (movie != null)
+                    newMovie.Id = movie.Id;
+
                 //TODO: Add new actors to database
 
                 try
-                {                    
+                {
                     AddMovieActorMappings(newMovie, actors);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     // Log exception and display friendly message to user
-                    return RedirectToAction("Error", "Listing", 
+                    return RedirectToAction("Error", "Listing",
                         new { message = "Looks like something went wrong. Movie added, but failed to map actors information. Please edit movie to add actors." });
                 }
 
@@ -172,7 +174,7 @@ namespace PracticeMovieDbProject.Controllers
                     AddMovieProducerMapping(newMovie, newMovie.Producer);
                 }
                 catch
-                {                    
+                {
                     // Log exception and display friendly message to user
                     return RedirectToAction("Error", "Listing",
                         new { message = "Looks like something went wrong. Movie added, but failed to map producer information. Please edit movie to add producer." });
@@ -187,14 +189,14 @@ namespace PracticeMovieDbProject.Controllers
                 // Log exception and display friendly message to user
                 return RedirectToAction("Error", "Listing", new { message = "Looks like something went wrong" });
             }
-            
-            return RedirectToAction("Movie", "Listing", new { id = movieId.Value });
+
+            return RedirectToAction("Movie", "Listing", new { id = newMovie.Id });
         }
 
         private bool MovieAlreadyExists(string name, int? releaseYear)
         {
-            var id = _movieDbService.GetMovieId(name, releaseYear);
-            return (id > 0);
+            var movie = _movieDbService.GetMovie(name, releaseYear);
+            return (movie != null);
         }
 
         private void ReloadProducersAndActors(MovieViewModel movieVm)
@@ -221,7 +223,7 @@ namespace PracticeMovieDbProject.Controllers
             {
                 _mappingService.AddBatchMovieActorMap(movie, actors);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -250,11 +252,11 @@ namespace PracticeMovieDbProject.Controllers
         {
             return new Movie()
             {
-                Name = movieVm.Name,
+                Name = movieVm.MovieName,
                 Plot = movieVm.Plot,
                 PosterUrl = movieVm.PosterUrl,
                 ReleaseYear = movieVm.ReleaseYear,
-                Producer = movieVm.Producer,
+                Producer = movieVm.NewProducer,
             };
         }
 
@@ -296,7 +298,7 @@ namespace PracticeMovieDbProject.Controllers
                                 LastName = result.LastName,
                                 DOB = result.DOB,
                                 Bio = result.Bio,
-                                Sex = result.Sex
+                                Sex = result.Sex.Description
                             })
                             .OrderBy(x => x.FirstName)
                             .ToList();
@@ -359,9 +361,14 @@ namespace PracticeMovieDbProject.Controllers
                 return RedirectToAction("Error", "Listing", new { message = "Looks like something went wrong" });
             }
 
-            var id = _producerDbService.GetProducerId(newProducer.FirstName, newProducer.MiddleName, newProducer.LastName, newProducer.DOB, newProducer.Sex);
+            var producer = _producerDbService.GetProducer(newProducer.FirstName, newProducer.MiddleName, newProducer.LastName, newProducer.DOB, newProducer.Sex);
 
-            return RedirectToAction("Detail", "Producer", new { id = id });
+            if (producer != null)
+            {
+                return RedirectToAction("Detail", "Producer", new { id = producer.Id });
+            }
+
+            return RedirectToAction("Detail", "Producer");
         }
 
         [HttpPost]
@@ -400,9 +407,14 @@ namespace PracticeMovieDbProject.Controllers
                 return RedirectToAction("Error", "Listing", new { message = "Looks like something went wrong" });
             }
 
-            var id = _actorDbService.GetActorId(newActor.FirstName, newActor.MiddleName, newActor.LastName, newActor.DOB, newActor.Sex);
+            var actor = _actorDbService.GetActor(newActor.FirstName, newActor.MiddleName, newActor.LastName, newActor.DOB, newActor.Sex);
 
-            return RedirectToAction("Detail", "Actor", new { id = id });
+            if(actor == null)
+            {
+                return RedirectToAction("Detail", "Actor", new { id = actor.Id });
+            }
+
+            return RedirectToAction("Detail", "Actor");
         }
     }
 }

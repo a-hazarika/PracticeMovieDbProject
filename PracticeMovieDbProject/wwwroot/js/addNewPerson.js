@@ -11,13 +11,16 @@ $("#producerAddedMsg").text("");
 $("#actorAddedMsg").text("");
 
 function showAddProducerDiv() {
-    $("#addProducerDiv").slideDown(500);
+    $("#producerPlaceHolder").append($("#addProducerDiv"));
+    $("#addProducerDiv").slideDown(300);
     $("#producerAddedMsg").text("");
+
     console.log("Slide down");
 }
 
 function showNewActorDiv() {
-    $("#addActorDiv").slideDown(500);
+    $("#actorPlaceHolder").append($("#addActorDiv"));
+    $("#addActorDiv").slideDown(300);
     $("#actorAddedMsg").text("");
     console.log("Slide down");
 }
@@ -32,20 +35,34 @@ function SerializeAndStoreData(inputs) {
 
 // PRODUCER input
 
-function hideProducerDiv() {
+function update_newProducerValueDiv() {
     producerList = SerializeAndStoreData(producer);
+    $("#newProducerValue").val(producerList);
+}
 
-    $("#addProducerDiv").slideUp(500);
+function UpdateNewProducerDisplayDivVisibility() {
+    if (producer.length > 0) {
+        $("#newProducerDisplay").slideDown(300);
+    }
+    else {
+        $("#newProducerDisplay").slideUp(300);
+    }
+}
 
+function hideProducerDiv() {    
+    $("#addProducerDiv").slideUp(300);
+    $("#producerPlaceHolder addProducerDiv").remove();
     var numProducers = producer.length;
     if (numProducers == 1) {
         $("#producerAddedMsg")
             .text(numProducers + " new producer added to be saved upon form submission.");
         $("#newProducerBtn").text("Change/Remove");
+        $("#producer").prop("disabled", true);
     }
     else {
         $("#producerAddedMsg").text("");
         $("#newProducerBtn").text("Add New");
+        $("#producer").prop("disabled", false);
     }
 
     console.log("Slide up");
@@ -56,7 +73,7 @@ function ClearProducerForm() {
     $("#pMName").val("");
     $("#pLName").val("");
     $("#pBio").val("");
-    $("input[id='Sex']:checked").prop('checked', false);
+    $("input[id='sex']:checked").prop('checked', false);
     $("#pDob").val("");
 }
 
@@ -83,7 +100,13 @@ function VerifyProducerInputs() {
 
 function StoreProducer() {
     producer[0] = ({
-        key: 0, firstName: fname, lastName: lname, middleName: mname, DOB: dob, gender: sex, Bio: bio
+        Key: 0,
+        FirstName: fname,
+        LastName: lname,
+        MiddleName: mname,
+        DOB: dob,
+        Sex: sex,
+        Bio: bio
     });
 }
 
@@ -91,6 +114,8 @@ function removeProducer() {
     producer.splice(0, 1);
     $("#tempProducer").remove();
     $("#addNewProducerBtn").prop('disabled', false);
+    UpdateNewProducerDisplayDivVisibility();
+    update_newProducerValueDiv();
 }
 
 function TempAddProducer() {
@@ -123,23 +148,40 @@ function addNewProducer() {
     mname = $("#pMName").val();
     lname = $("#pLName").val();
     bio = $("#pBio").val();
-    sex = $("input[id='Sex']:checked").val();
-    dob = $("#pDob").val();
+    sex = $("input[id='sex']:checked").val();
+    dob = $("#pDob").val() == "" ? "0001-01-01" : $("#pDob").val();
 
     if (VerifyProducerInputs()) {
         StoreProducer();
         TempAddProducer();
+        UpdateNewProducerDisplayDivVisibility();
         ClearProducerForm();
-        $("#addNewProducerBtn").prop('disabled', true);        
+        update_newProducerValueDiv();
+        $("#addNewProducerBtn").prop('disabled', true);
     }
 }
 
 // ACTOR inputs
 
+function update_newActorValueDiv() {
+    actorList = SerializeAndStoreData(actors);
+    $("#newActorValue").val(actorList);
+}
+
+function UpdateNewActorsDisplayDivVisibility() {
+    if (actors.length > 0) {
+        $("#newActorsDisplay").slideDown(300);
+    }
+    else {
+        $("#newActorsDisplay").slideUp(300);
+    }
+}
+
 function hideActorDiv() {
     actorList = SerializeAndStoreData(actors);
 
-    $("#addActorDiv").slideUp(500);
+    $("#addActorDiv").slideUp(300);
+    $("#actorPlaceHolder addActorDiv").remove();
 
     var numActors = actors.length;
     $("#addActorBtn").text("Add/Remove");
@@ -182,12 +224,12 @@ function VerifyActorInputs() {
 
 function StoreActor() {
     actors.push({
-        key: actorCount,
-        firstName: afname,
-        lastName: alname,
-        middleName: amname,
+        Key: actorCount,
+        FirstName: afname,
+        LastName: alname,
+        MiddleName: amname,
         DOB: adob,
-        gender: asex,
+        Sex: asex,
         Bio: abio
     });
 }
@@ -196,7 +238,7 @@ function removeActor(idVal) {
     var id = parseInt(idVal);
     if (id != NaN) {
         for (var i = 0; i <= actors.length - 1; i++) {
-            if (actors[i].key == id) {
+            if (actors[i].Key == id) {
                 actors.splice(i, 1);
                 $("#" + "actor" + id.toString()).remove();
             }
@@ -206,6 +248,9 @@ function removeActor(idVal) {
     if (actors.length < 1) {
         actorCount = 0;
     }
+
+    UpdateNewActorsDisplayDivVisibility();
+    update_newActorValueDiv();
 }
 
 function AddActorToHtmlList() {
@@ -248,12 +293,14 @@ function addNewActor() {
     alname = $("#aLName").val();
     abio = $("#aBio").val();
     asex = $("input[id='aSex']:checked").val();
-    adob = $("#aDob").val();
+    adob = $("#aDob").val() == "" ? "0001-01-01" : $("#aDob").val();
 
     if (VerifyActorInputs()) {
         StoreActor();
         AddActorToHtmlList();
         actorCount++;
+        UpdateNewActorsDisplayDivVisibility();
+        update_newActorValueDiv();
         ClearActorForm();
     }
 }

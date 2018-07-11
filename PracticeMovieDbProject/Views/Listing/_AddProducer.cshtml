@@ -1,14 +1,13 @@
 ﻿@model PersonViewModel
 
 <div class="padded">
-    <div class="row padded">        
+    <div class="row padded">
         <strong class="text-muted">Add Producer</strong>
 
     </div>
     <div class="row">
-        <div class="col-md-9 col-sm-12" style="border:1px solid red">
+        <div class="col-md-9 col-sm-12"">
             <form onsubmit="process">
-
                 <div class="row">
                     <div class="col-sm-4 padded">
                         <div class="col-sm">
@@ -45,7 +44,7 @@
                             <span id="pDobReq" class="text-danger"></span>
                         </div>
                         <div class="col-sm">
-                            <input type="date" id="pDob" class="widthFull" />
+                            <input type="date" id="pDob" class="widthFull" value="0001-01-01" />
                         </div>
                     </div>
                     <div class="col-sm-6 padded">
@@ -56,9 +55,9 @@
                         <div class="col-sm">
                             @foreach (var gender in Model.SexOptions)
                             {
-                            <label class="radio-inline">
-                                <input type="radio" asp-for="@Model.Sex" class="radio-inline" value="@gender.Description" />@gender.Description
-                            </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="sex" name="sex" class="radio-inline" value="@gender.Description" />@gender.Description
+                                </label>
                             }
                         </div>
                     </div>
@@ -84,11 +83,13 @@
         </div>
 
         <!-- Display new producers that are being added -->
-        <div class="col-md-3 col-sm-12 left-grey-borderline background-floralwhite">
-            Hello
+        <div class="col-md-3 col-sm-12 left-grey-borderline background-whitesmoke" id="newProducerDisplay">
+            <span class="text-muted">
+                <strong>Producer</strong>
+            </span>
             <div id="pItemListDiv">
                 <ul id="producerItem">
-
+                    
                 </ul>
             </div>
         </div>

@@ -62,8 +62,8 @@
     max-height: 400px;
 }
 
-.li{
-    list-style:none;
+.li {
+    list-style: none;
 }
 
 .auto-scroll {
@@ -74,8 +74,8 @@
     visibility: hidden;
 }
 
-.roundedRedBorderBox {
-    border-radius: 10px;
+.roundedBorderBox {
+    border-radius: 10px;    
     border: 1px solid red;
 }
 
@@ -83,28 +83,46 @@
     border-left: 1px solid grey;
 }
 
-.border-thin-white {
-    border: 1px solid white;
+.border-thin-cornflowerblue {
+    border: 1px solid cornflowerblue;
 }
 
-.background-powderBlue {
-    background-color: powderblue;
+.background-ghostwhite-with-shadow {
+    background-color: ghostwhite;
+    box-shadow: 
+        rgba(128, 128, 128, 0.3) 3px 3px 10px,
+        rgba(128, 128, 128, 0.3) -3px 0px 10px;
 }
 
-.background-antiquewhite {
-    background-color: antiquewhite;
-}
-
-.background-floralwhite {
-    background-color: floralwhite;
+.background-whitesmoke {
+    background-color: whitesmoke;
 }
 
 .checkboxCustom {
     width: 18px;
-    height:18px;
+    height: 18px;
     padding: 0;
     margin: 0;
     vertical-align: middle;
+}
+
+.listText {
+    vertical-align: middle;
+}
+
+.image-contained {
+    margin: 5px auto;
+    padding: 5px;
+    height: 17.6vw;
+    width: 100%;
+    color: white;
+    border: 2px solid whitesmoke;
+    border-radius: 4px;
+}
+
+.fixex-minWidth {
+    width: 100%;
+    min-width: 100px;
 }
 
 #assetName {
@@ -120,6 +138,14 @@
     display: none;
 }
 
-.listText {
-    vertical-align:middle;
+#newActorsDisplay {
+    display: none;
+}
+
+#newProducerDisplay {
+    display: none;
+}
+
+#addNewProducerForm {
+    display: none;
 }

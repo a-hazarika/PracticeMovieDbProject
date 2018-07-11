@@ -6,7 +6,7 @@
 
     </div>
     <div class="row">
-        <div class="col-md-9 col-sm-12" style="border:1px solid red">
+        <div class="col-md-9 col-sm-12">
             <form onsubmit="process">
 
                 <div class="row">
@@ -45,7 +45,7 @@
                             <span id="aDobReq" class="text-danger"></span>
                         </div>
                         <div class="col-sm">
-                            <input type="date" id="aDob" class="widthFull" />
+                            <input type="date" id="aDob" class="widthFull" value="0001-01-01" />
                         </div>
                     </div>
                     <div class="col-sm-6 padded">
@@ -84,8 +84,10 @@
         </div>
 
         <!-- Display new producers that are being added -->
-        <div class="col-md-3 col-sm-12 left-grey-borderline background-floralwhite">
-            Hello
+        <div class="col-md-3 col-sm-12 left-grey-borderline background-whitesmoke" id="newActorsDisplay">
+            <span class="text-muted">
+                <strong>Actors</strong>
+            </span>
             <div id="aItemListDiv">
                 <ul id="actorItem"></ul>
             </div>

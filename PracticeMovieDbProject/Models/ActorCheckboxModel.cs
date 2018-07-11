@@ -20,7 +20,7 @@ namespace PracticeMovieDbProject.Models
         [StringLength(255)]
         public string LastName { get; set; }
 
-        public virtual Gender Sex { get; set; }
+        public string Sex { get; set; }
 
         public string Bio { get; set; }
 

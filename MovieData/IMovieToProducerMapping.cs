@@ -7,6 +7,7 @@ namespace MovieData
 {
     public interface IMovieToProducerMapping
     {
-        void AddMovieProducerMap(Movie movie, Producer producer);
+        int AddMovieProducerMap(Movie movie, Producer producer);
+        int RemoveMovieProducerMap(int movieId, int producerId);
     }
 }

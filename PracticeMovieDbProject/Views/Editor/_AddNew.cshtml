@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-3 padded">
                 <div class="col-sm">
-                    <label asp-for="@Model.FirstName"> </label>
+                    <label asp-for="@Model.FirstName"> </label><span class="text-danger">*</span>
                     <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
                 </div>
                 <div class="col-sm">
@@ -22,7 +22,7 @@
             </div>
             <div class="col-sm-3 padded">
                 <div class="col-sm">
-                    <label asp-for="@Model.LastName"> </label>
+                    <label asp-for="@Model.LastName"> </label><span class="text-danger">*</span>
                     <span asp-validation-for="@Model.LastName" class="text-danger"></span>
                 </div>
                 <div class="col-sm">
@@ -42,7 +42,7 @@
             </div>
             <div class="col-sm-3 padded">
                 <div class="col-sm">
-                    <label asp-for="@Model.Sex"></label>
+                    <label asp-for="@Model.Sex"></label><span class="text-danger">*</span>
                     <span asp-validation-for="@Model.Sex" class="text-danger"></span>
                 </div>
                 <div class="col-sm">

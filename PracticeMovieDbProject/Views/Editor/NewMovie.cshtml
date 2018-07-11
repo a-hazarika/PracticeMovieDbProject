@@ -20,9 +20,9 @@
             </div>
             <div class="row">
                 <div class="col-sm-8 topMarginOnly">
-                    <label asp-for="@Model.Name"></label> 
-                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
-                    <input class="form-control" asp-for="@Model.Name">
+                    <label asp-for="@Model.MovieName"></label> 
+                    <span asp-validation-for="@Model.MovieName" class="text-danger"></span>
+                    <input class="form-control" asp-for="@Model.MovieName">
                 </div>
                 <div class="col-sm-4 topMarginOnly">
                     <label asp-for="@Model.ReleaseYear"></label> (Ex: 2018) 
@@ -40,9 +40,9 @@
             <div class="row">
                 <div class="col-sm-12 form-inline topMarginOnly zeroPadding">
                     <div class="col-sm-12">
-                        <label asp-for="@Model.Producer">Producer (select one):</label>
-                        <span asp-validation-for="@Model.Producer" class="text-danger"></span>
-                        <select class="form-control" asp-for="@Model.ProducerId" asp-items="@(new SelectList(Model.Producers,"Id", "FullName"))"></select>
+                        <label asp-for="@Model.NewProducer">Producer (select one):</label>
+                        <span asp-validation-for="@Model.NewProducer" class="text-danger"></span>
+                        <select class="form-control" asp-for="@Model.NewProducerId" asp-items="@(new SelectList(Model.Producers,"Id", "FullName"))"></select>
                         <button class="btn-sm btn-info" id="btnAddProducer">Add New</button>
                     </div>
                 </div>

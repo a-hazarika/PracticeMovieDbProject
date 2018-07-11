@@ -16,13 +16,20 @@ namespace MovieServices
             _context = context;
         }
 
-        public void Add(Movie newMovie)
+        public int Add(Movie newMovie)
         {
             ValidateEntry(newMovie);
             SanitizeInput(newMovie);
 
             _context.Add(newMovie);
-            _context.SaveChanges();
+            return _context.SaveChanges();
+        }
+
+        public int Update(Movie newMovie)
+        {
+            _context.Update(newMovie);
+            var count = _context.SaveChanges();
+            return count;
         }
 
         public Movie GetById(int id)
@@ -42,22 +49,16 @@ namespace MovieServices
             return result;
         }
 
-        public int? GetMovieId(string name, int? releaseYear)
+        public Movie GetMovie(string name, int? releaseYear)
         {
             name = SanitizeInput(name);
 
             if (!releaseYear.HasValue)
             {
-                return _context.Movies
-                    .Where(x => x.Name == name)?
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+                return _context.Movies.FirstOrDefault(x => x.Name.Equals(name));
             }
 
-            return _context.Movies
-                    .Where(x => x.Name == name && x.ReleaseYear == releaseYear)?
-                    .Select(y => y.Id)
-                    .FirstOrDefault();
+            return _context.Movies.FirstOrDefault(x => x.Name.Equals(name) && x.ReleaseYear == releaseYear);
         }
 
         public IEnumerable<Actor> GetMovieActors(int movieId)
@@ -106,9 +107,9 @@ namespace MovieServices
                 throw new ArgumentException($"Release year should be between {minYear} and {maxYear}");
             }
 
-            var id = GetMovieId(newMovie.Name, newMovie.ReleaseYear);
+            var movie = GetMovie(newMovie.Name, newMovie.ReleaseYear);
 
-            if (id > 0)
+            if (movie != null)
             {
                 if (newMovie.ReleaseYear.HasValue)
                 {
@@ -129,7 +130,7 @@ namespace MovieServices
         {
             return input?.Trim();
         }
-
+        
         #endregion
     }
 }

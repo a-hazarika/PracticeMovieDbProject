@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace MovieData.Models
@@ -14,6 +15,7 @@ namespace MovieData.Models
         public string PosterUrl { get; set; }        
         public int? ReleaseYear { get; set; }
         public virtual Producer Producer { get; set; }
+        [NotMapped]
         public virtual IEnumerable<Actor> Actors { get; set; }
     }
 }
