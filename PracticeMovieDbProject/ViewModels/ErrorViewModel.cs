@@ -1,5 +1,3 @@
-using System;
-
 namespace PracticeMovieDbProject.ViewModels
 {
     public class ErrorViewModel

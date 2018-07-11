@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MovieData.Models
+﻿namespace MovieData.Models
 {
     public class MovieActorMapping
     {

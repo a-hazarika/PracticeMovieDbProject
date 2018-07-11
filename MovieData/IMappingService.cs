@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MovieData
+﻿namespace MovieData
 {
     public interface IMappingService : IMovieToActorMapping, IMovieToProducerMapping
     {

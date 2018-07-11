@@ -1,5 +1,5 @@
-﻿using MovieData.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieData.Models;
 
 namespace MovieData
 {

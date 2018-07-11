@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieData;
 using MovieData.Models;
-using MovieServices;
 using Newtonsoft.Json;
 using PracticeMovieDbProject.Models;
 using PracticeMovieDbProject.ViewModels;
@@ -413,82 +410,18 @@ namespace PracticeMovieDbProject.Controllers
                 return new List<Actor>();
             }
 
-            //var recordsToAdd = new List<Actor>();
-
-            // Filter out actors already existing in the db
-            /*
-            foreach (var actor in newActors)
-            {
-                var index = movieVm.AllActors.FirstOrDefault(x => x.FirstName.Equals(actor.FirstName)
-                            && x.LastName.Equals(actor.LastName)
-                            && x.MiddleName.Equals(actor.MiddleName)
-                            && x.DOB.Date == actor.DOB.Date
-                            && x.Sex == actor.Sex.Description)?.Id;
-
-                if (index.HasValue)
-                {
-                    continue;
-                }
-
-                recordsToAdd.Add(actor);
-            }
-            */
-
             var newActorsCount = newActors.Count;
             var savedRecords = 0;
             try
             {
-                savedRecords = _actorDbService.AddBatch(newActors); //recordsToAdd);
-                //if (recordsToAdd.Count != savedRecords)
+                savedRecords = _actorDbService.AddBatch(newActors);
+
                 if (newActors.Count != savedRecords)
                 {
                     throw new Exception();
                 }
 
-                newActors = newActors.Concat(newCheckedActors).ToList();
-                /*
-                
-                //var actors = _actorDbService.GetAll();
-                //var newActorsFromDb = new List<Actor>();
-
-                foreach (var actor in newActors)
-                {
-                    var temp = new Actor();
-
-                    if (!string.IsNullOrWhiteSpace(actor.MiddleName) && actor.DOB != null)
-                    {
-                        temp = actors
-                        .FirstOrDefault(x => x.FirstName.Equals(actor.FirstName)
-                        && x.LastName.Equals(actor.LastName)
-                        && x.MiddleName.Equals(actor.MiddleName)
-                        && x.Sex == actor.Sex
-                        && x.DOB.Date == actor.DOB.Date);
-                    }
-                    else if (actor.DOB != null)
-                    {
-                        temp = actors
-                        .FirstOrDefault(x => x.FirstName.Equals(actor.FirstName)
-                        && x.LastName.Equals(actor.LastName)
-                        && x.Sex == actor.Sex
-                        && x.DOB.Date == actor.DOB.Date);
-                    }
-                    else
-                    {
-                        temp = actors
-                        .FirstOrDefault(x => x.FirstName.Equals(actor.FirstName)
-                        && x.LastName.Equals(actor.LastName)
-                        && x.MiddleName.Equals(actor.MiddleName)
-                        && x.Sex == actor.Sex);
-                    }
-
-                    if (temp != null)
-                    {
-                        newActorsFromDb.Add(temp);
-                    }
-                }
-
-                newActors = newActorsFromDb;
-                */
+                newActors = newActors.Concat(newCheckedActors).ToList();               
             }
             catch (Exception ex)
             {
