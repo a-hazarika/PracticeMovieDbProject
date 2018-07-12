@@ -11,7 +11,7 @@
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
-            <img src="~/images/posters/Black Panther.jpg" alt="Black Panther" class="img-responsive" />    
+            <img src="~/images/posters/Black Panther.jpg" alt="Black Panther" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
                     <h1 class="text-info">Black Panther</h1>
@@ -54,60 +54,72 @@
                         {
                             releaseYear = "";
                         }
-                    <tr class="movieRow">
-                        <td>
-                            @{
-                                var moviePoster = "/images/posters/No_Image_Available.gif";
-                                if (!string.IsNullOrWhiteSpace(movie.PosterUrl))
-                                {
-                                    moviePoster = "/images/" + movie.PosterUrl;
-                                }
-                            }
-
-                            <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">
-                                <img src="@moviePoster" class="rectangularImage" />
-                            </a>
-                        </td>
-                        <td>
-                            <div>
-                                <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.MovieName</a>
-                                <span class="textLarge"> @releaseYear</span>
-                            </div>
-                            <div> @movie.Plot </div>
-                            <div class="topMarginOnly">
-                                <span class="boldGrayText">Producer: </span>
-                                <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.CurrentProducerId">@movie.ProducerName</a>
-                            </div>
-                            <div>
-                                <span class="boldGrayText">Actors: </span>
-
+                        <tr class="movieRow">
+                            <td>
                                 @{
-                                    string endChar = "";
-                                    foreach (var actor in movie.MovieActors)
+                                    var moviePoster = "/images/posters/No_Image_Available.gif";
+                                    if (!string.IsNullOrWhiteSpace(movie.PosterUrl))
                                     {
-                                        if (actor.Id != movie.MovieActors.Last().Id)
-                                        {
-                                            endChar = ", ";
-                                        }
-                                        else
-                                        {
-                                            endChar = "";
-                                        }
-
-                                    <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id">@actor.FullName</a>@endChar
+                                        moviePoster = "/images/" + movie.PosterUrl;
                                     }
                                 }
-                            </div>                        
-                        </td>
-                        <td>
-                            <a asp-controller="Listing" asp-action="Edit" asp-route-id="@movie.Id">
-                                <button class="btn btn-sm btn-info">Edit</button>
-                            </a>
-                        </td>
-                    </tr>
+
+                                <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">
+                                    <img src="@moviePoster" class="rectangularImage" />
+                                </a>
+                            </td>
+                            <td>
+                                <div>
+                                    <a class="movieHeader" asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@movie.MovieName</a>
+                                    <span class="textLarge"> @releaseYear</span>
+                                </div>
+                                <div> @movie.Plot </div>
+                                <div class="topMarginOnly">
+                                    <span class="boldGrayText">Producer: </span>
+                                    <a asp-controller="Producer" asp-action="Detail" asp-route-id="@movie.CurrentProducerId">@movie.ProducerName</a>
+                                </div>
+                                <div>
+                                    <span class="boldGrayText">Actors: </span>
+
+                                    @{
+                                        string endChar = "";
+                                        int i = 1;
+                                        foreach (var actor in movie.MovieActors)
+                                        {
+                                            if (actor.Id != movie.MovieActors.Last().Id)
+                                            {
+                                                if (i == 3)
+                                                {
+                                                    endChar = " . . .";
+                                                    <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id">@actor.FullName</a><span>,</span>
+                                                    <a asp-controller="Listing" asp-action="Movie" asp-route-id="@movie.Id">@endChar</a>
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    endChar = ", ";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                endChar = "";
+                                            }
+
+                                            <a asp-controller="Actor" asp-action="Detail" asp-route-id="@actor.Id">@actor.FullName</a>@endChar
+                                            i++;
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <a asp-controller="Listing" asp-action="Edit" asp-route-id="@movie.Id">
+                                    <button class="btn btn-sm btn-info">Edit</button>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
-        </div>       
-    </div>   
+        </div>
+    </div>
 </div>
