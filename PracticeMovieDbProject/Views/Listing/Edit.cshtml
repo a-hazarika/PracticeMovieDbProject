@@ -45,7 +45,7 @@
                     <span asp-validation-for="@Model.MovieName" class="text-danger"></span>
                     <input type="text" class="form-control" asp-for="@Model.MovieName">
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-xs-12">
                     <label>Year:</label>
                     <span asp-validation-for="@Model.ReleaseYear" class="text-danger"></span>
                     <input type="number" class="form-control" asp-for="@Model.ReleaseYear">
@@ -63,7 +63,7 @@
                 <div class="col-sm-12 col-xs-12">
                     <label>Producer (select one):</label><span class="text-danger">*</span>
                     <strong><span class="text-info" id="producerAddedMsg"></span></strong>
-                    <span asp-validation-for="@Model.Producers" class="text-danger"></span>
+                    <span id="Producers" asp-validation-for="@Model.Producers" class="text-danger"></span>
                 </div>
 
                 <div class="col-sm-10 col-xs-12">
@@ -100,7 +100,7 @@
                 <div class="col-sm-12 col-xs-12">
                     <label>Actors:</label><span class="text-danger">*</span>
                     <strong><span class="text-info" id="actorAddedMsg"></span></strong>
-                    <span asp-validation-for="@Model.MovieActors" class="text-danger"></span>
+                    <span id="MovieActors" asp-validation-for="@Model.MovieActors" class="text-danger"></span>
                 </div>
 
                 <div class="col-sm-12 col-xs-12">
@@ -115,7 +115,7 @@
                             </label>
                         </li>
 
-                        @for (var i = 0; i < Model.AllActors.Count; i++)
+                        @for (var i = 0; i < Model.AllActors?.Count; i++)
                         {
                         <li class="btn-primary border-thin-cornflowerblue" style="padding:2px 3px;">
 

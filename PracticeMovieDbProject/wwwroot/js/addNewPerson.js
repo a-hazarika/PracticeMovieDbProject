@@ -10,6 +10,12 @@ var actorList;
 $("#producerAddedMsg").text("");
 $("#actorAddedMsg").text("");
 
+$(document).ready(function () {
+    UpdateCurrentManuallyAddedProducerOnPageReload();
+    UpdateCurrentManuallyAddedActorsOnPageReload();
+});
+
+
 function showAddProducerDiv() {
     $("#producerPlaceHolder").append($("#addProducerDiv"));
     $("#addProducerDiv").slideDown(300);
@@ -34,6 +40,32 @@ function SerializeAndStoreData(inputs) {
 }
 
 // PRODUCER input
+function UpdateCurrentManuallyAddedProducerOnPageReload() {
+    var producerDetails = $("#newProducerValue").val();
+
+    if (producerDetails == "") {
+        return;
+    }
+
+    producer = JSON.parse(producerDetails);
+    if (producer.length > 0) {
+
+        fname = producer[0].FirstName;
+        lname = producer[0].LastName;
+        mname = producer[0].MiddleName;
+        dob = producer[0].DOB;
+        sex = producer[0].Sex;
+        bio = producer[0].Bio;
+
+        if (VerifyProducerInputs()) {
+            TempAddProducer();
+            UpdateNewProducerDisplayDivVisibility();
+            ClearProducerForm();
+            $("#addNewProducerBtn").prop('disabled', true);
+            hideProducerDiv();
+        }
+    }
+}
 
 function update_newProducerValueDiv() {
     producerList = SerializeAndStoreData(producer);
@@ -49,7 +81,7 @@ function UpdateNewProducerDisplayDivVisibility() {
     }
 }
 
-function hideProducerDiv() {    
+function hideProducerDiv() {
     $("#addProducerDiv").slideUp(300);
     $("#producerPlaceHolder addProducerDiv").remove();
     var numProducers = producer.length;
@@ -58,6 +90,7 @@ function hideProducerDiv() {
             .text(numProducers + " new producer added to be saved upon form submission.");
         $("#newProducerBtn").text("Change/Remove");
         $("#producer").prop("disabled", true);
+        $("#Producers").text("");
     }
     else {
         $("#producerAddedMsg").text("");
@@ -163,6 +196,39 @@ function addNewProducer() {
 
 // ACTOR inputs
 
+function UpdateCurrentManuallyAddedActorsOnPageReload() {
+    actorList = $("#newActorValue").val();
+
+    if (actorList == "") {
+        return;
+    }
+
+    actors = JSON.parse(actorList);
+    if (actors.length > 0) {
+
+        var i = 0;
+        for (i = 0; i < actors.length; i++) {
+            actors[i].Key = i;
+            actorCount = i;
+            afname = actors[i].FirstName;
+            alname = actors[i].LastName;
+            amname = actors[i].MiddleName;
+            adob = actors[i].DOB;
+            asex = actors[i].Sex;
+            abio = actors[i].Bio;
+
+            if (VerifyActorInputs()) {
+                AddActorToHtmlList();
+                UpdateNewActorsDisplayDivVisibility();
+                ClearActorForm();
+                hideActorDiv();
+            }
+        }
+
+        actorCount = i;
+    }
+}
+
 function update_newActorValueDiv() {
     actorList = SerializeAndStoreData(actors);
     $("#newActorValue").val(actorList);
@@ -188,10 +254,12 @@ function hideActorDiv() {
     if (numActors == 1) {
         $("#actorAddedMsg")
             .text(numActors + " new actor added to be saved upon form submission.");
+        $("#MovieActors").text("");
     }
     else if (numActors > 1) {
         $("#actorAddedMsg")
             .text(numActors + " new actors added to be saved upon form submission.");
+        $("#MovieActors").text("");
     }
     else {
         $("#actorAddedMsg").text("");

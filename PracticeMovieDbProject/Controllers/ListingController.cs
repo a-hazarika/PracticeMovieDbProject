@@ -205,7 +205,7 @@ namespace PracticeMovieDbProject.Controllers
             {
                 if (movieVm.NewProducerId < 1 || movieVm.CurrentProducerId != movieVm.NewProducerId)
                 {
-                    SaveProducer(movieVm.NewProducer);
+                    movieVm.NewProducerId = SaveProducer(movieVm.NewProducer);
                 }
             }
             catch (Exception ex)
@@ -436,7 +436,7 @@ namespace PracticeMovieDbProject.Controllers
             return newActors;
         }
 
-        private void SaveProducer(Producer newProducer)
+        private int SaveProducer(Producer newProducer)
         {
             try
             {
@@ -447,7 +447,7 @@ namespace PracticeMovieDbProject.Controllers
 
                 if (newProducer.Id > 0)
                 {
-                    return;
+                    return newProducer.Id;
                 }
 
                 //Check if new specified producer (not selected from drop down list) already exists
@@ -455,7 +455,7 @@ namespace PracticeMovieDbProject.Controllers
                 if (producer != null)
                 {
                     newProducer = producer;
-                    return;
+                    return newProducer.Id;
                 }
 
                 var newEntries = _producerDbService.Add(newProducer);
@@ -469,6 +469,8 @@ namespace PracticeMovieDbProject.Controllers
             {
                 throw new Exception("Failed to save producer information");
             }
+
+            return newProducer.Id;
         }
 
         private void SavePoster(IFormFile poster, string newPosterUrl)
@@ -525,8 +527,7 @@ namespace PracticeMovieDbProject.Controllers
         }
 
         private bool ValidateAndUpdateMovieActors(MovieViewModel movieVm, List<Actor> newActors)
-        {
-            movieVm.MovieActors = new List<Actor>();
+        {   
             movieVm.MovieActors = movieVm.AllActors?
                 .Where(result => result.Checked)?
                 .Select(x => new Actor
@@ -540,6 +541,11 @@ namespace PracticeMovieDbProject.Controllers
                     Sex = _genders.FirstOrDefault(y => y.Description.Equals(x.Sex))
                 })
                 .ToList();
+
+            if(movieVm.MovieActors == null)
+            {
+                movieVm.MovieActors = new List<Actor>();
+            }
 
             if (string.IsNullOrWhiteSpace(movieVm.NewActorDetails) && !movieVm.MovieActors.Any())
             {
@@ -719,7 +725,7 @@ namespace PracticeMovieDbProject.Controllers
         private void ReloadMovieViewModel(MovieViewModel movieVm)
         {
             movieVm.Producers = _producerDbService.GetAll().OrderBy(x => x.FirstName).ToList();
-            movieVm.PersonViewModel = new PersonViewModel(_genders);
+            movieVm.PersonViewModel = new PersonViewModel(_genders);            
         }
 
         private List<ActorCheckboxModel> ProjectToActorCheckboxModelList(List<Actor> allActors, List<Actor> actorsInMovie)
