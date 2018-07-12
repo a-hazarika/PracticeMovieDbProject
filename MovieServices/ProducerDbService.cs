@@ -89,7 +89,7 @@ namespace MovieServices
         public IEnumerable<Movie> GetProducerMovies(int producerId)
         {
             var resultSet = _context.MovieProducerMappings
-                    .Where(x => x.Producer.Id == producerId)
+                    .Where(x => x.Producer.Id == producerId)?
                     .Include(x => x.Movie)
                     .Select(result => new Movie
                     {

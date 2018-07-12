@@ -106,7 +106,7 @@ namespace MovieServices
 
             var pairs = _context.MovieActorMappings.Include(x => x.Movie).Include(x => x.Actor).Where(x => x.Movie.Id == movieId);
 
-            _context.MovieActorMappings.RemoveRange(pairs.Where(x => actorIds.Contains(x.Actor.Id)));
+            _context.MovieActorMappings.RemoveRange(pairs?.Where(x => actorIds.Contains(x.Actor.Id)));
             var j = _context.SaveChanges();
             return j;
         }

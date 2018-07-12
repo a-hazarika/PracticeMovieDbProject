@@ -64,7 +64,7 @@ namespace MovieServices
         public IEnumerable<Actor> GetMovieActors(int movieId)
         {
             var resultSet = _context.MovieActorMappings
-                .Where(x => x.Movie.Id == movieId)
+                .Where(x => x.Movie.Id == movieId)?
                 .Include(x => x.Actor)
                 .Select(result => new Actor
                 {

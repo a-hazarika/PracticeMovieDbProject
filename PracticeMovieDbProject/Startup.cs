@@ -46,7 +46,7 @@ namespace PracticeMovieDbProject
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Listing/Error");
             }
 
             app.UseStaticFiles();

@@ -220,7 +220,7 @@ namespace PracticeMovieDbProject.Controllers
                 newActors = SaveNewActors(movieVm, newActors, currentMovieActors);
 
                 actorsToRemove = currentMovieActors
-                    .Where(x => movieVm.MovieActors.FirstOrDefault(y => y.Id == x.Id) == null)
+                    .Where(x => movieVm.MovieActors.FirstOrDefault(y => y.Id == x.Id) == null)?
                     .Select(result => result.Id)
                     .ToList();
             }
@@ -403,7 +403,7 @@ namespace PracticeMovieDbProject.Controllers
         private List<Actor> SaveNewActors(MovieViewModel movieVm, List<Actor> newActors, IEnumerable<Actor> currentMovieActors)
         {
             var newCheckedActors = new List<Actor>();
-            newCheckedActors = movieVm.MovieActors?.Where(x => !currentMovieActors.Any(y => y.Id == x.Id)).ToList();
+            newCheckedActors = movieVm.MovieActors?.Where(x => !currentMovieActors.Any(y => y.Id == x.Id))?.ToList();
 
             if (!newActors.Any() && !newCheckedActors.Any())
             {
@@ -526,8 +526,9 @@ namespace PracticeMovieDbProject.Controllers
 
         private bool ValidateAndUpdateMovieActors(MovieViewModel movieVm, List<Actor> newActors)
         {
-            movieVm.MovieActors = movieVm.AllActors
-                .Where(result => result.Checked)
+            movieVm.MovieActors = new List<Actor>();
+            movieVm.MovieActors = movieVm.AllActors?
+                .Where(result => result.Checked)?
                 .Select(x => new Actor
                 {
                     Id = x.Id,
