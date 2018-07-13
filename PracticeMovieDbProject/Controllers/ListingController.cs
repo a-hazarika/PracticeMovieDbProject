@@ -126,7 +126,7 @@ namespace PracticeMovieDbProject.Controllers
                     MovieActors = actorsInMovie,
                     AllActors = ProjectToActorCheckboxModelList(allActors, actorsInMovie),
                     Producers = producers,
-                    CurrentProducerId = movie.Producer.Id,
+                    CurrentProducerId = movie.Producer?.Id ?? 0,
                     PersonViewModel = new PersonViewModel(_genders)
                 };
             }
