@@ -8,10 +8,12 @@
     }
 
     var moviePoster = "/images/posters/No_Image_Available.gif";
-    if(!string.IsNullOrWhiteSpace(Model.Movie.PosterUrl))
+    if (!string.IsNullOrWhiteSpace(Model.Movie.PosterUrl))
     {
         moviePoster = "/images/" + Model.Movie.PosterUrl;
     }
+
+    var noProducerInfo = "No producer information available.";
 }
 
 <div class="jumbotron">
@@ -33,7 +35,14 @@
             <br /><br />
 
             <strong>Producer:</strong>
-            <a asp-controller="Producer" asp-action="Detail" asp-route-id="@Model.Movie.Producer.Id">@Model.Movie.Producer.FullName</a>
+            @if (!string.IsNullOrWhiteSpace(@Model.Movie.Producer.FullName))
+            {
+                <a asp-controller="Producer" asp-action="Detail" asp-route-id="@Model.Movie.Producer.Id">@Model.Movie.Producer.FullName</a>
+            }
+            else
+            {
+                <span>@noProducerInfo</span>
+            }
             <br />
 
             <strong>Actors</strong>

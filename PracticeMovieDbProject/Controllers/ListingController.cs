@@ -76,6 +76,11 @@ namespace PracticeMovieDbProject.Controllers
                 return View("Error", new ErrorViewModel(404, "Requested information could not be found"));
             }
 
+            if(movie.Producer == null)
+            {
+                movie.Producer = new Producer();
+            }
+
             var model = new ViewMovieViewModel
             {
                 Movie = movie
