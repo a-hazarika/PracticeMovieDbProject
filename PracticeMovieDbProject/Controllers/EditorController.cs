@@ -100,7 +100,7 @@ namespace PracticeMovieDbProject.Controllers
                 return RedirectToAction("Detail", "Producer", new { id = producer.Id });
             }
 
-            return RedirectToAction("Detail", "Producer");
+            return RedirectToAction("Index", "Producer");
         }
 
         [HttpPost]
@@ -141,12 +141,12 @@ namespace PracticeMovieDbProject.Controllers
 
             var actor = _actorDbService.GetActor(newActor.FirstName, newActor.MiddleName, newActor.LastName, newActor.DOB, newActor.Sex);
 
-            if (actor == null)
+            if (actor != null)
             {
                 return RedirectToAction("Detail", "Actor", new { id = actor.Id });
             }
 
-            return RedirectToAction("Detail", "Actor");
+            return RedirectToAction("Index", "Actor");
         }
     }
 }

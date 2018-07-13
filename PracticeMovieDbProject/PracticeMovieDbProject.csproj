@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\READ ME.txt" Link="READ ME.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
@@ -21,8 +27,39 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DbScripts\" />
     <Folder Include="wwwroot\images\icons\" />
     <Folder Include="wwwroot\images\posters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\DbScripts\CreateActorsTable.sql" Link="DbScripts\CreateActorsTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\CreateGenderTable.sql" Link="DbScripts\CreateGenderTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\CreateMovieActorMappingsTable.sql" Link="DbScripts\CreateMovieActorMappingsTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\CreateMovieProducerMappingsTable.sql" Link="DbScripts\CreateMovieProducerMappingsTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\CreateMoviesTable.sql" Link="DbScripts\CreateMoviesTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\CreateProducersTable.sql" Link="DbScripts\CreateProducersTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\InsertEntries.sql" Link="DbScripts\InsertEntries.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\RunScripts.sql" Link="DbScripts\RunScripts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\DbScripts\SetupDb.bat" Link="DbScripts\SetupDb.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
