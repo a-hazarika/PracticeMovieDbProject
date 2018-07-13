@@ -1,4 +1,0 @@
-﻿SET IDENTITY_INSERT [dbo].[Producers] ON
-INSERT INTO [dbo].[Producers] ([Id], [FirstName], [MiddleName], [LastName], [Bio], [DOB], [SexId]) VALUES (1, N'Patrick', NULL, N'Crowley', N'Patrick Crowley is a producer and assistant director, known for The Bourne Ultimatum (2007), The Bourne Supremacy (2004) and The Bourne Identity (2002). He is married to Cathleen Summers.', N'1954-12-04 00:00:00', 1)
-INSERT INTO [dbo].[Producers] ([Id], [FirstName], [MiddleName], [LastName], [Bio], [DOB], [SexId]) VALUES (2, N'Steven ', NULL, N'Spielberg', N'One of the most influential personalities in the history of cinema, Steven Spielberg is Hollywood''s best known director and one of the wealthiest filmmakers in the world. He has an extraordinary number of commercially successful and critically acclaimed credits to his name, either as a director, producer or writer.', N'1946-12-18 00:00:00', 1)
-SET IDENTITY_INSERT [dbo].[Producers] OFF

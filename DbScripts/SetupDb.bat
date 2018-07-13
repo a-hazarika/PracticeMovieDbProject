@@ -1,0 +1,1 @@
+sqlcmd -S (localdb)\MSSQLLocalDB -E -i RunScripts.sql
