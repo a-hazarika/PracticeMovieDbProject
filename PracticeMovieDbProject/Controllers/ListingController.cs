@@ -76,7 +76,7 @@ namespace PracticeMovieDbProject.Controllers
                 return View("Error", new ErrorViewModel(404, "Requested information could not be found"));
             }
 
-            if(movie.Producer == null)
+            if (movie.Producer == null)
             {
                 movie.Producer = new Producer();
             }
@@ -132,6 +132,11 @@ namespace PracticeMovieDbProject.Controllers
             }
             catch (Exception ex)
             {
+                if (id != 0)
+                {
+                    return RedirectToAction("Error", new { message = "Invalid movie request" });
+                }
+
                 listingResult = new MovieViewModel()
                 {
                     AllActors = ProjectToActorCheckboxModelList(allActors, actorsInMovie),
@@ -150,25 +155,35 @@ namespace PracticeMovieDbProject.Controllers
             // Check if ModelState is valid before proceeding
             ReloadMovieViewModel(movieVm);
 
-            if (!ModelState.IsValid)
-            {
-                return View("Edit", movieVm);
-            }
-
             var newActors = new List<Actor>();
             var newPosterUrl = string.Empty;
             var currentMovieActors = _movieDbService.GetMovieActors(movieVm.Id); // Currently mapped to movie to keep + those that need to be removed from mapping. Current movie actors before updating
-
-            if (!ValidateReleaseYear(movieVm)
-                || !ValidateAndUpdateCurrentProducer(movieVm)
-                || !ValidateAndUpdateMovieActors(movieVm, newActors)
-                || !ValidatePosterAndGetPosterUrl(movieVm.Poster, out newPosterUrl))
-            {
-                return View("Edit", movieVm);
-            }
-
             try
             {
+                var valid = true;
+                valid &= ValidateMovie(movieVm);
+                valid &= ValidateReleaseYear(movieVm);
+                valid &= ValidateAndUpdateCurrentProducer(movieVm);
+                valid &= ValidateAndUpdateMovieActors(movieVm, newActors);
+                var validPoster = ValidatePosterAndGetPosterUrl(movieVm.Poster, out newPosterUrl);
+                valid &= validPoster;
+
+                if (!valid)
+                {
+                    if (movieVm.Poster != null && validPoster)
+                    {
+                        ModelState.AddModelError("Poster", "Please reselect poster");
+                        ModelState.AddModelError("GlobalError", "Please reselect poster");
+                    }
+
+                    return View("Edit", movieVm);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return View("Edit", movieVm);
+                }
+
                 _currentMovie = _movieDbService.GetById(movieVm.Id);
                 movieVm.PosterUrl = newPosterUrl;
                 SaveMovie(movieVm, newActors, currentMovieActors);
@@ -180,7 +195,7 @@ namespace PracticeMovieDbProject.Controllers
 
             return RedirectToAction("Movie", new { id = _currentMovie.Id });
         }
-
+        
         [Route("Listing/Error/{code:int?}")]
         public IActionResult Error(int code, string message = null)
         {
@@ -198,6 +213,27 @@ namespace PracticeMovieDbProject.Controllers
         }
 
         #region Supporting Methods
+
+        private bool ValidateMovie(MovieViewModel movieVm)
+        {
+            if (movieVm.Id == 0)
+            {
+                if (_movieDbService.GetMovie(movieVm.MovieName, movieVm.ReleaseYear) != null)
+                {
+                    ModelState.AddModelError("GlobalError", "Movie already exists");
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (_movieDbService.GetById(movieVm.Id) == null)
+            {
+                throw new Exception("Invalid movie request");
+            }
+
+            return true;
+        }
 
         private void SaveMovie(MovieViewModel movieVm, List<Actor> newActors, IEnumerable<Actor> currentMovieActors)
         {
@@ -318,7 +354,7 @@ namespace PracticeMovieDbProject.Controllers
             }
 
             try
-            {                
+            {
                 if (newActors.Any())
                 {
                     count = _mappingService.AddBatchMovieActorMap(_currentMovie, newActors);
@@ -426,7 +462,7 @@ namespace PracticeMovieDbProject.Controllers
                     throw new Exception();
                 }
 
-                newActors = newActors.Concat(newCheckedActors).ToList();               
+                newActors = newActors.Concat(newCheckedActors).ToList();
             }
             catch (Exception ex)
             {
@@ -488,7 +524,7 @@ namespace PracticeMovieDbProject.Controllers
                 }
 
                 var dest = newPosterUrl.Split('/');
-                if(dest.Length < 2)
+                if (dest.Length < 2)
                 {
                     throw new Exception();
                 }
@@ -517,11 +553,14 @@ namespace PracticeMovieDbProject.Controllers
 
             var fileType = poster.ContentType.Split("/").Last();
 
-            if (!Enum.GetNames(typeof(PosterTypes)).Contains(fileType) || poster.Length <= 0)
+            if(fileType != "svg+xml")
             {
-                ModelState.AddModelError("Poster", "Invalid poster file");
-                return false;
-            }
+                if (!Enum.GetNames(typeof(PosterTypes)).Contains(fileType) || poster.Length <= 0)
+                {
+                    ModelState.AddModelError("Poster", "Invalid poster file");
+                    return false;
+                }
+            }            
 
             try
             {
@@ -539,7 +578,7 @@ namespace PracticeMovieDbProject.Controllers
         }
 
         private bool ValidateAndUpdateMovieActors(MovieViewModel movieVm, List<Actor> newActors)
-        {   
+        {
             movieVm.MovieActors = movieVm.AllActors?
                 .Where(result => result.Checked)?
                 .Select(x => new Actor
@@ -554,7 +593,7 @@ namespace PracticeMovieDbProject.Controllers
                 })
                 .ToList();
 
-            if(movieVm.MovieActors == null)
+            if (movieVm.MovieActors == null)
             {
                 movieVm.MovieActors = new List<Actor>();
             }
@@ -737,7 +776,7 @@ namespace PracticeMovieDbProject.Controllers
         private void ReloadMovieViewModel(MovieViewModel movieVm)
         {
             movieVm.Producers = _producerDbService.GetAll().OrderBy(x => x.FirstName).ToList();
-            movieVm.PersonViewModel = new PersonViewModel(_genders);            
+            movieVm.PersonViewModel = new PersonViewModel(_genders);
         }
 
         private List<ActorCheckboxModel> ProjectToActorCheckboxModelList(List<Actor> allActors, List<Actor> actorsInMovie)
