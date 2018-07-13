@@ -1,0 +1,34 @@
+This movie database web application was developed using .Net Core 2.0 and Sql Server Express as the database.
+
+Database configuration used: 
+Instance: MSSQLLocalDB
+Database: MovieDatabase
+Security: Integrated Security
+
+Run SetupDb.bat present in "DbScripts" folder to create the database, tables and populate tables with initial data.
+
+PracticeMovieDbProject.exe to start the web application.
+
+Application features:
+1. Add/Edit movie
+2. Add actors
+3. Add producers
+4. View list of all movies
+5. View individual movie details
+6. View individual actor details
+7. View individual producer details
+
+Adding/Editing a movie:
+1. The movie title, producer and actors are mandatory
+2. Movie with title (and release year if provided) same as existing movie cannot be added
+3. If poster is added, it is validated to check whether it is an image: jpeg, gif, png, svg
+4. Only one producer can be selected for a movie. If the producer is not present in the list, a new producer can be added by clicking the "Add New" button. The first name, last name and sex fields are mandatory. Adding a new producer manually will be selected as the producer for the movie. If a producer with the same first, middle and last names and same sex is present in the database, the existing one will be selected while saving the movie, else the new producer will be added to the database.
+5. Multiple actors can be selected for a movie. If the actors are not present in the list, new actors can be added by clicking the "Add New" button. The first name, last name and sex fields are mandatory. If an actor with the same first, middle and last names and same sex is present in the database, the existing one will be selected while saving the movie, else the new actor will be added to the database.
+6. Manually added actors/producer is saved when "Save" button is clicked to save the movie.
+7. If movie release year is entered, it should be of 4 digits and between "1800" and "current year + 10"
+
+Adding actor/producer from add actor/producer page:
+1. First name, last name and sex fields are mandatory
+2. If an actor with same name, date of birth(if entered) and sex is present in the database as entered for new actor, the user will be redirected to error page. Same happens for adding new producer as well.
+
+Disclaimer: Images taken from Imdb.com, max-steel-reboot.wikia.com/wiki/File:No_Image_Available.gif
