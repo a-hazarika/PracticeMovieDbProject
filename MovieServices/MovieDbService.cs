@@ -65,7 +65,6 @@ namespace MovieServices
         {
             var resultSet = _context.MovieActorMappings
                 .Where(x => x.Movie.Id == movieId)?
-                .Include(x => x.Actor)
                 .Select(result => new Actor
                 {
                     Id = result.Actor.Id,
