@@ -530,7 +530,7 @@ namespace PracticeMovieDbProject.Controllers
                 }
 
                 var posterPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", dest[0], dest[1]);
-                Console.WriteLine($"Poster path: {posterPath}");
+
                 using (var stream = new FileStream(posterPath, FileMode.Create))
                 {
                     poster.CopyTo(stream);
